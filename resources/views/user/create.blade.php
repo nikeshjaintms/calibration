@@ -19,7 +19,7 @@
                         <i class="icon-arrow-right"></i>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('admin.customer.index') }}">User</a>
+                        <a href="{{ route('users.index') }}">User</a>
                     </li>
                     <li class="separator">
                         <i class="icon-arrow-right"></i>
@@ -35,7 +35,7 @@
                         <div class="card-header">
                             <div class="card-title">Add User</div>
                         </div>
-                        <form method="POST" action="{{ route('admin.user.store') }}" id="userForm">
+                        <form method="POST" action="{{ route('users.store') }}" id="userForm">
                             @csrf
                             <div class="card-body">
                                 <div class="row">
@@ -63,7 +63,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="">Password<span style="color: red">*</span></label>
-                                            <input type="text" class="form-control" name="password" id="password"
+                                            <input type="password" class="form-control" name="password" id="password"
                                                    placeholder="Enter your Password" value="{{old('password')}}" required />
                                             @error('password')
                                             <div class="text-danger">{{ $message }}</div>
@@ -71,6 +71,25 @@
                                         </div>
                                     </div>
                                     <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="">Confirm Password<span style="color: red">*</span></label>
+                                            <input type="password" class="form-control" name="password_confirmation" id="password_confirmation"
+                                                   placeholder="Confirm your Password" value="{{old('password_confirmation')}}" required />
+                                            @error('password_confirmation')
+                                            <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Status">Status<span style="color: red">*</span></label>
+                                            <select name="status" class="form-select" id="status">
+                                                <option value="active">Active</option>
+                                                <option value="inactive">Inactive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    {{-- <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="userRole">Roles<span style="color: red">*</span></label>
                                         <select name="role" class="form-select" id="role">
@@ -83,13 +102,13 @@
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                             </div>
 
                             <div class="card-action">
                                 <button class="btn btn-success" type="submit">Submit</button>
-                                <a href="{{ route('admin.user.index') }}" class="btn btn-danger">Cancel</a>
+                                <a href="{{ route('users.index') }}" class="btn btn-danger">Cancel</a>
                             </div>
                         </form>
                     </div>
@@ -137,11 +156,17 @@
                     },
                     password:{
                         required:true,
+                        minlength:6
+
 
                     },
-                    role:{
+                    password_confirmation:{
+                        required:true,
+                        equalTo:"#password"
+                    },
+                    status:{
                         required:true
-                    }
+                    },
                 },
                 messages: {
                     name: {
@@ -155,8 +180,12 @@
                     password: {
                         required: "Please enter a Password",
                     },
-                    role:{
-                        required:"Please select a role"
+                    password_confirmation: {
+                        required: "Please confirm your Password",
+                        equalTo: "Password confirmation does not match"
+                    },
+                    status:{
+                        required: "Please select a Status",
                     }
 
                 },

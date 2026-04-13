@@ -19,7 +19,7 @@
                         <i class="icon-arrow-right"></i>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('admin.user.index') }}">User</a>
+                        <a href="{{ route('users.index') }}">User</a>
                     </li>
                     <li class="separator">
                         <i class="icon-arrow-right"></i>
@@ -35,7 +35,7 @@
                         <div class="card-header">
                             <div class="card-title">Edit User</div>
                         </div>
-                        <form method="POST" action="{{ route('admin.user.update', $data->id) }}" id="userForm">
+                        <form method="POST" action="{{ route('users.update', $data->id) }}" id="userForm">
                             @csrf
                             @method('PUT')
                             <div class="card-body">
@@ -62,8 +62,42 @@
                                             @enderror
                                         </div>
                                     </div>
-
                                     <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="">Password<span style="color: red">*</span></label>
+                                            <input type="password" class="form-control" name="password" id="password"
+                                                   placeholder="Enter your Password" value="{{old('password')}}"  />
+                                            @error('password')
+                                            <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="">Confirm Password<span style="color: red">*</span></label>
+                                            <input type="password" class="form-control" name="password_confirmation" id="password_confirmation"
+                                                   placeholder="Confirm your Password" value="{{old('password_confirmation')}}"  />
+                                            @error('password_confirmation')
+                                            <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="">Status<span style="color: red">*</span></label>
+                                            <select name="status" class="form-select" id="status">
+                                                <option value="">Select Status</option>
+                                                <option value="active" {{ $data->status == 'active' ? 'selected' : '' }}>Active</option>
+                                                <option value="inactive" {{ $data->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                            </select>
+                                            @error('status')
+                                            <div class="text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+
+                                    {{-- <div class="col-md-6">
                                         <div class="form-group">
                                         <label for="userRole" class="col-3 col-form-label">Roles</label>
                                         <select name="role" class="form-select" id="role">
@@ -78,13 +112,13 @@
                                             <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                 </div>
                             </div>
                             <div class="card-action">
                                 <button class="btn btn-success" type="submit">Submit</button>
-                                <a href="{{ route('admin.user.index') }}" class="btn btn-danger">Cancel</a>
+                                <a href="{{ route('users.index') }}" class="btn btn-danger">Cancel</a>
                             </div>
                         </form>
                     </div>
@@ -136,7 +170,7 @@
 
                     },
 
-                    role:{
+                    status:{
                         required:true
                     }
                 },
@@ -150,9 +184,8 @@
                         required: "Please enter a Email",
 
                     },
-
-                    role:{
-                        required:"Please select a role"
+                    status:{
+                        required:"Please select a Status"
                     }
 
                 },

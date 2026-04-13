@@ -6,6 +6,16 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/admin', function () {
-    return view('admin.index');
-});
+route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+Route::resource('users', App\Http\Controllers\UserController::class);
+
+Route::resource('clients', App\Http\Controllers\ClientsController::class);
+
+Route::resource('mocs', App\Http\Controllers\MOCController::class);
+
+Route::resource('flanges', App\Http\Controllers\FlangeController::class);
+
+Route::resource('capillaries', App\Http\Controllers\CapillaryController::class);

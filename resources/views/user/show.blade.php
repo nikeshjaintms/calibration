@@ -4,7 +4,7 @@
     <div class="container">
         <div class="page-inner">
             <div class="page-header">
-                <h3 class="fw-bold mb-3">Purchase</h3>
+                <h3 class="fw-bold mb-3">User</h3>
                 <ul class="breadcrumbs mb-3">
                     <li class="nav-home">
                         <a href="{{ route('dashboard') }}">
@@ -15,7 +15,7 @@
                         <i class="icon-arrow-right"></i>
                     </li>
                     <li class="nav-item">
-                        <a href="{{ route('admin.user.index') }}">User</a>
+                        <a href="{{ route('users.index') }}">User</a>
                     </li>
                     <li class="separator">
                         <i class="icon-arrow-right"></i>
@@ -29,7 +29,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <a href="{{ route('admin.user.index') }}" class="btn btn-rounded btn-primary float-end"> <i
+                            <a href="{{ route('users.index') }}" class="btn btn-rounded btn-primary float-end"> <i
                                     class="fas fa-angle-left"></i> Back</a>
                             <h4 class="card-title">User Detailed</h4>
                         </div>
@@ -49,16 +49,14 @@
                                     <tr>
                                         <th>Name</th>
                                         <th>Email</th>
-                                        <th>Role</th>
-                                        <th>Permissions</th>
+                                        <th>Status</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr>
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
-                                        <td>{{ $role->name }}</td>
-                                        <td>{{ $permissionNames }}</td>
+                                        <td><span class="badge badge-{{ $user->status == 'active' ? 'success' : 'danger' }}">{{ ucfirst($user->status) }}</span></td>
                                     </tr>
 
                                 </table>
