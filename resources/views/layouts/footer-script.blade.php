@@ -24,11 +24,24 @@
 <script src="{{ asset('backend/assets/js/plugin/jsvectormap/jsvectormap.min.js')}}"></script>
 <script src="{{ asset('backend/assets/js/plugin/jsvectormap/world.js')}}"></script>
 
+<!-- Select2 -->
+<script src="{{ asset('backend/assets/js/plugin/select2/select2.full.min.js')}}"></script>
+
 <!-- Sweet Alert -->
 <script src="{{ asset('backend/assets/js/plugin/sweetalert/sweetalert.min.js')}}"></script>
 
 <!-- Kaiadmin JS -->
 <script src="{{ asset('backend/assets/js/kaiadmin.min.js')}}"></script>
+
+<script>
+    $(document).ready(function() {
+        if ($('.select2').length > 0) {
+            $('.select2').select2({
+                theme: "bootstrap"
+            });
+        }
+    });
+</script>
 
 <!-- Kaiadmin DEMO methods, don't include it in your project! -->
 <script src="{{ asset('backend/assets/js/setting-demo.js')}}"></script>

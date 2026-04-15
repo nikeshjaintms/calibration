@@ -51,6 +51,24 @@
                   </ul>
                 </div>
               </li>
+              <li class="nav-item">
+                <a href="{{ route('jobcards.index') }}">
+                  <i class="fas fa-file-invoice"></i>
+                  <p>Jobcards</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('inspections.index') }}">
+                  <i class="fas fa-clipboard-check"></i>
+                  <p>Inspections</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="{{ route('oil-fillings.index') }}">
+                  <i class="fas fa-oil-can"></i>
+                  <p>Oil Filling</p>
+                </a>
+              </li>
               <li class="nav-section">
                 <span class="sidebar-mini-icon">
                   <i class="fa fa-ellipsis-h"></i>

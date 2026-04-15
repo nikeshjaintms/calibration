@@ -19,3 +19,7 @@ Route::resource('mocs', App\Http\Controllers\MOCController::class);
 Route::resource('flanges', App\Http\Controllers\FlangeController::class);
 
 Route::resource('capillaries', App\Http\Controllers\CapillaryController::class);
+
+Route::resource('jobcards', App\Http\Controllers\JobcardController::class);
+Route::resource('inspections', App\Http\Controllers\InspectionController::class);
+Route::resource('oil-fillings', App\Http\Controllers\OilFillingController::class);
