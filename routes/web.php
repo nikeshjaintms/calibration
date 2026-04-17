@@ -23,3 +23,6 @@ Route::resource('capillaries', App\Http\Controllers\CapillaryController::class);
 Route::resource('jobcards', App\Http\Controllers\JobcardController::class);
 Route::resource('inspections', App\Http\Controllers\InspectionController::class);
 Route::resource('oil-fillings', App\Http\Controllers\OilFillingController::class);
+Route::resource('calibrations', App\Http\Controllers\CalibrationController::class);
+
+Route::get('/jobcards/{id}/certificate', [App\Http\Controllers\CertificateController::class, 'generateJobCertificate'])->name('jobcards.certificate');

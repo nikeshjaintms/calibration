@@ -55,7 +55,14 @@ class JobcardController extends Controller
      */
     public function show($id)
     {
-        $jobcard = jobcard::with(['client', 'inspections'])->findOrFail($id);
+        $jobcard = jobcard::with([
+            'client', 
+            'inspections', 
+            'oil_filling.moc', 
+            'oil_filling.flange', 
+            'oil_filling.capillary', 
+            'calibration.points'
+        ])->findOrFail($id);
         return view('jobcard.show', compact('jobcard'));
     }
 

@@ -47,8 +47,8 @@
                                         @forelse($inspections as $index => $inspection)
                                             <tr>
                                                 <td>{{ $index + 1 }}</td>
-                                                <td>{{ $inspection->jobcard->jobcard_number }}</td>
-                                                <td>{{ $inspection->jobcard->customer_name }}</td>
+                                                <td>{{ $inspection->jobcard->jobcard_number ?? 'N/A' }}</td>
+                                                <td>{{ $inspection->jobcard->customer_name ?? 'N/A' }}</td>
                                                 <td>
                                                     <span class="badge badge-{{ $inspection->body_condition == 'ok' ? 'success' : 'danger' }}">
                                                         {{ ucfirst($inspection->body_condition) }}
@@ -106,7 +106,6 @@
 @endsection
 
 @section('footer-script')
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>

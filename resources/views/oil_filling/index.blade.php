@@ -47,7 +47,7 @@
                                     @forelse($oil_fillings as $index => $item)
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
-                                            <td>{{ $item->jobcard->jobcard_number }}</td>
+                                            <td>{{ $item->jobcard->jobcard_number ?? 'N/A' }}</td>
                                             <td>{{ $item->oil_type }}</td>
                                             <td>{{ $item->quantity }}</td>
                                             <td>{{ \Carbon\Carbon::parse($item->filling_date)->format('d-M-Y') }}</td>
@@ -82,7 +82,6 @@
 </div>
 
 @section('footer-script')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>

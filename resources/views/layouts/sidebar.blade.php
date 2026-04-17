@@ -69,6 +69,12 @@
                   <p>Oil Filling</p>
                 </a>
               </li>
+              <li class="nav-item">
+                <a href="{{ route('calibrations.index') }}">
+                  <i class="fas fa-balance-scale"></i>
+                  <p>Calibration</p>
+                </a>
+              </li>
               <li class="nav-section">
                 <span class="sidebar-mini-icon">
                   <i class="fa fa-ellipsis-h"></i>

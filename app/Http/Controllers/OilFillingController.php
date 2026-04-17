@@ -17,7 +17,12 @@ class OilFillingController extends Controller
      */
     public function index()
     {
-        $oil_fillings = OilFilling::with(['jobcard', 'moc', 'flange', 'capillary', 'user'])->latest()->get();
+        $oil_fillings = OilFilling::with([
+            'jobcard' => function($query) {
+                $query->withTrashed();
+            }, 
+            'moc', 'flange', 'capillary', 'user'
+        ])->latest()->get();
         return view('oil_filling.index', compact('oil_fillings'));
     }
 
@@ -63,7 +68,12 @@ class OilFillingController extends Controller
      */
     public function show(string $id)
     {
-        $oil_filling = OilFilling::with(['jobcard', 'moc', 'flange', 'capillary', 'user'])->findOrFail($id);
+        $oil_filling = OilFilling::with([
+            'jobcard' => function($query) {
+                $query->withTrashed();
+            }, 
+            'jobcard.client', 'moc', 'flange', 'capillary', 'user'
+        ])->findOrFail($id);
         return view('oil_filling.show', compact('oil_filling'));
     }
 
