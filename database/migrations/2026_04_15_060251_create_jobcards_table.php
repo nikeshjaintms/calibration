@@ -33,7 +33,7 @@ return new class extends Migration
         $table->enum('motherboard_status', ['ok', 'damage'])->default('ok');
         $table->enum('power_card_status', ['ok', 'damage'])->default('ok');
         $table->enum('sensor_status', ['ok', 'damage'])->default('ok');
-        
+            
         // ફક્ત એક જ વાર status રાખવું
         $table->enum('status', ['active', 'inactive'])->default('active'); 
 
