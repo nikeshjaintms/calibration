@@ -37,7 +37,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Jobcard<span style="color: red">*</span></label>
-                                <select name="jobcard_id" class="form-select" required>
+                                <select name="jobcard_id" class="form-select select2" required>
                                     <option value="">Select Jobcard</option>
                                     @foreach($jobcards as $jobcard)
                                     <option value="{{ $jobcard->id }}" {{ (isset($jobcard_id) && $jobcard_id == $jobcard->id) || old('jobcard_id') == $jobcard->id ? 'selected' : '' }}>

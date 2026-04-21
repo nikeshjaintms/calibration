@@ -24,4 +24,14 @@ class jobcard extends Model
     {
         return $this->hasOne(Inspection::class, 'jobcard_id')->latestOfMany();
     }
+
+    public function oil_filling()
+    {
+        return $this->hasOne(OilFilling::class, 'jobcard_id');
+    }
+
+    public function calibration()
+    {
+        return $this->hasOne(Calibration::class, 'jobcard_id');
+    }
 }

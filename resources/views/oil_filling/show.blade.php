@@ -37,8 +37,8 @@
                         <div class="row">
                             <div class="col-md-6 mb-4">
                                 <h6 class="text-uppercase text-muted fw-bold">Jobcard Information</h6>
-                                <p class="mb-1"><strong>Jobcard Number:</strong> {{ $oil_filling->jobcard->jobcard_number }}</p>
-                                <p class="mb-1"><strong>Customer Name:</strong> {{ $oil_filling->jobcard->customer_name }}</p>
+                                <p class="mb-1"><strong>Jobcard Number:</strong> {{ $oil_filling->jobcard->jobcard_number ?? 'N/A' }}</p>
+                                <p class="mb-1"><strong>Customer Name:</strong> {{ $oil_filling->jobcard->customer_name ?? 'N/A' }}</p>
                                 <p class="mb-1"><strong>Client:</strong> {{ $oil_filling->jobcard->client->name ?? 'N/A' }}</p>
                             </div>
                             <div class="col-md-6 mb-4">
