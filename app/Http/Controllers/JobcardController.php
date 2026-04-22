@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\jobcard;
 use App\Models\Clients;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class JobcardController extends Controller
 {
@@ -31,7 +32,7 @@ class JobcardController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'client_id' => 'required|exists:clients,id',
             'jobcard_number' => 'required|string|unique:jobcards,jobcard_number',
             'jobcard_date' => 'required|date',
@@ -43,9 +44,16 @@ class JobcardController extends Controller
             'start_range' => 'required|string|max:255',
             'end_range' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
-            'bill_no' => 'nullable|string|max:255',
-            'bill_date' => 'nullable|date',
+            'body_condition' => 'required|in:ok,damage',
+            'display_status' => 'required|in:working,not_working',
+            'motherboard_status' => 'required|in:ok,damage',
+            'power_card_status' => 'required|in:ok,damage',
+            'sensor_status' => 'required|in:ok,damage',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         jobcard::create($request->all());
 
@@ -57,14 +65,7 @@ class JobcardController extends Controller
      */
     public function show($id)
     {
-        $jobcard = jobcard::with([
-            'client', 
-            'inspections', 
-            'oil_filling.moc', 
-            'oil_filling.flange', 
-            'oil_filling.capillary', 
-            'calibration.points'
-        ])->findOrFail($id);
+        $jobcard = jobcard::with('client')->findOrFail($id);
         return view('jobcard.show', compact('jobcard'));
     }
 
@@ -84,7 +85,7 @@ class JobcardController extends Controller
     public function update(Request $request, $id)
     {
         $jobcard = jobcard::findOrFail($id);
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'client_id' => 'required',
             'jobcard_number' => 'required|string|unique:jobcards,jobcard_number,' . $id,
             'jobcard_date' => 'required|date',
@@ -95,10 +96,17 @@ class JobcardController extends Controller
             'serial_no' => 'required|string|max:255',
             'start_range' => 'required|string|max:255',
             'end_range' => 'required|string|max:255',
-            'status' => 'required|in:active,inactive,pending,completed',
-            'bill_no' => 'nullable|string|max:255',
-            'bill_date' => 'nullable|date',
+            'status' => 'required|in:active,inactive',
+            'body_condition' => 'required|in:ok,damage',
+            'display_status' => 'required|in:working,not_working',
+            'motherboard_status' => 'required|in:ok,damage',
+            'power_card_status' => 'required|in:ok,damage',
+            'sensor_status' => 'required|in:ok,damage',
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         $jobcard->update($request->all());
 

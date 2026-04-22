@@ -25,6 +25,12 @@ class UserController extends Controller
         return back()->withErrors(['email' => 'Invalid credentials.'])->withInput();
 
     }
+    public function logout()
+    {
+        auth()->logout();
+        return redirect()->route('login')->with('success', 'Logged out successfully.');
+    }
+
     public function index()
     {
         $users = User::all();

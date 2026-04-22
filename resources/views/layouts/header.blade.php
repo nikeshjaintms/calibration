@@ -3,9 +3,8 @@
         <div class="main-header-logo">
             <!-- Logo Header -->
             <div class="logo-header" data-background-color="dark">
-                <a href="index.html" class="logo">
-                    <img src="{{ asset('backend/assets/img/kaiadmin/logo_light.svg') }}" alt="navbar brand"
-                        class="navbar-brand" height="20" />
+                <a href="{{ route('dashboard') }}" class="logo">
+                    <img src="{{ asset('logo/Automac white logo.png') }}" alt="navbar brand" class="navbar-brand" height="30" />
                 </a>
                 <div class="nav-toggle">
                     <button class="btn btn-toggle toggle-sidebar">
@@ -34,7 +33,7 @@
 
                             <span class="profile-username">
                                 <span class="op-7">Hi,</span>
-                                <span class="fw-bold">Hizrian</span>
+                                <span class="fw-bold">{{ Auth::user()->name }}</span>
                             </span>
                         </a>
                         <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -43,8 +42,8 @@
                                     <div class="user-box">
 
                                         <div class="u-text">
-                                            <h4>Hizrian</h4>
-                                            <p class="text-muted">hello@example.com</p>
+                                            <h4>{{ Auth::user()->name }}</h4>
+                                            <p class="text-muted">{{ Auth::user()->email }}</p>
                                             <a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View
                                                 Profile</a>
                                         </div>
@@ -54,7 +53,14 @@
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#">Account Setting</a>
                                     <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" href="#">Logout</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        Logout
+                                    </a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
                                 </li>
                             </div>
                         </ul>
