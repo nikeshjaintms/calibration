@@ -10,6 +10,21 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+
+    public function makeLogin(Request $request){
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
+
+        if (auth()->attempt($request->only('email', 'password'))) {
+            return redirect()->route('dashboard')->with('success', 'Logged in successfully.');
+        }
+
+        return back()->withErrors(['email' => 'Invalid credentials.'])->withInput();
+
+    }
     public function index()
     {
         $users = User::all();

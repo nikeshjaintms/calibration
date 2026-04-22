@@ -15,7 +15,7 @@
         .container {
             width: 100%;
             border: 1px solid #ddd;
-            padding: 20px;
+            padding: 10px;
             border-radius: 8px;
         }
 
@@ -50,7 +50,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .info-table td {
@@ -143,8 +143,9 @@
 
     <div class="container">
         <div class="header">
-            <div class="logo">AUTOMAC ENGINEERS</div>
-            <div class="motto">Excellency in Technology Solution</div>
+            {{-- <div class="logo">AUTOMAC ENGINEERS</div>
+            <div class="motto">Excellency in Technology Solution</div> --}}
+            <img src="{{ public_path('logo/image.png') }}" alt="" width="150" style="margin-bottom: 10px;">
             <div class="certificate-title">CALIBRATION CERTIFICATE</div>
         </div>
 
@@ -159,7 +160,9 @@
                     </tr>
                     <tr>
                         <td class="info-label">BILL NO & DATE :</td>
-                        <td>- / -</td>
+                        <td>{{ $jobcard->bill_no ?? '-' }} / 
+                            {{ $jobcard->bill_date ? \Carbon\Carbon::parse($jobcard->bill_date)->format('d/m/Y') : '-' }}
+                        </td>
                     </tr>
                     <tr>
                         <td class="info-label">Customer Name:</td>
@@ -191,13 +194,50 @@
                     </tr>
                     <tr>
                         <td class="info-label">Range:</td>
-                        <td>{{ $jobcard->start_range }} to {{ $jobcard->end_range }}</td>
+                        <td>{{ $jobcard->start_range }} to {{ $jobcard->end_range }} mmHg</td>
                     </tr>
                 </table>
             </div>
         </div>
+        @php $inspection = $jobcard->inspections->first(); @endphp
 
-        @if($jobcard->oil_filling)
+        @if ($inspection)
+            <div class="section-header">INSPECTION</div>
+
+            <div class="row">
+                <div class="col-50">
+                    <table class="info-table">
+                        <tr>
+                            <td class="info-label">Body Condition:</td>
+                            <td>{{ $inspection->body_condition }}</td>
+                        </tr>
+                        <tr>
+                            <td class="info-label">Display Status:</td>
+                            <td>{{ $inspection->display_status }}</td>
+                        </tr>
+                        <tr>
+                            <td class="info-label">Sensor:</td>
+                            <td>{{ $inspection->sensor_status }}</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="col-50">
+                    <table class="info-table">
+                        <tr>
+                            <td class="info-label">Mother Board:</td>
+                            <td>{{ $inspection->motherboard_status }}</td>
+                        </tr>
+                        <tr>
+                            <td class="info-label">Power Card:</td>
+                            <td>{{ $inspection->power_card_status }}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        @endif
+
+        @if ($jobcard->oil_filling)
             <div class="section-header">OIL FILLING</div>
             <div class="row">
                 <div class="col-50">
@@ -226,11 +266,14 @@
                 </div>
             </div>
 
+                        <div class="section-header">Diaphragm</div>
+
             <table class="info-table">
                 <tr>
                     <td class="info-label">MOC :</td>
                     <td>{{ $jobcard->oil_filling->moc->name ?? 'N/A' }}</td>
                     <td class="info-label">FLANGE :</td>
+                    {{-- @dd($jobcard->oil_filling) --}}
                     <td>{{ $jobcard->oil_filling->flange->name ?? 'N/A' }}</td>
                 </tr>
                 <tr>
@@ -240,7 +283,7 @@
             </table>
         @endif
 
-        @if($jobcard->calibration)
+        @if ($jobcard->calibration)
             <div class="section-header">CALIBRATION DATA</div>
             <div class="row">
                 <div class="col-50">
@@ -252,6 +295,10 @@
                         <tr>
                             <td class="info-label">Certificate No:</td>
                             <td>{{ $jobcard->calibration->certificate_number }}</td>
+                        </tr>
+                         <tr>
+                            <td class="info-label">Temperature:</td>
+                            <td>{{ $jobcard->calibration->temperature }} °C</td>
                         </tr>
                     </table>
                 </div>
@@ -265,28 +312,13 @@
                             <td class="info-label">Instrument:</td>
                             <td>{{ $jobcard->calibration->instrument }}</td>
                         </tr>
-                    </table>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-50">
-                    <table class="info-table">
-                        <tr>
-                            <td class="info-label">Temperature:</td>
-                            <td>{{ $jobcard->calibration->temperature }} °C</td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="col-50">
-                    <table class="info-table">
-                        <tr>
+                         <tr>
                             <td class="info-label">Humidity:</td>
                             <td>{{ $jobcard->calibration->humidity }} %</td>
                         </tr>
                     </table>
                 </div>
             </div>
-
             <table class="data-table">
                 <thead>
                     <tr>
@@ -298,7 +330,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($jobcard->calibration->points as $point)
+                    @foreach ($jobcard->calibration->points as $point)
                         <tr>
                             <td>{{ $point->set_point_percentage }}</td>
                             <td>{{ number_format($point->expected, 4) }}</td>
@@ -314,7 +346,7 @@
 
             <div class="footer">
                 <div class="result-box">
-                    @if($jobcard->calibration->result == 'pass')
+                    @if ($jobcard->calibration->result == 'pass')
                         <span class="text-success">✔ Overall Result: Pass</span>
                     @else
                         <span class="text-danger">✘ Overall Result: Fail</span>

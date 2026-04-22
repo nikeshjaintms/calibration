@@ -8,7 +8,7 @@ class jobcard extends Model
 {
     use SoftDeletes;
 
-    protected $fillable = ['client_id', 'customer_name', 'tag_no', 'model_no', 'serial_no', 'start_range', 'end_range', 'status', 'jobcard_date', 'jobcard_number', 'reciving_date'];
+    protected $fillable = ['client_id', 'customer_name', 'tag_no', 'model_no', 'serial_no', 'start_range', 'end_range', 'status', 'jobcard_date', 'jobcard_number', 'reciving_date', 'bill_no','bill_date'];
 
     public function client()
     {

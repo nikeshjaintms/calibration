@@ -31,11 +31,11 @@ class OilFillingController extends Controller
      */
     public function create()
     {
-        $jobcards = jobcard::all();
+        $jobcards = jobcard::where('status', 'active')->get();
         $mocs = MOC::where('status', 'active')->get();
         $flanges = Flange::where('status', 'active')->get();
         $capillaries = Capillary::where('status', 'active')->get();
-        $users = User::all();
+        $users = User::where('status', 'active')->get();
         return view('oil_filling.create', compact('jobcards', 'mocs', 'flanges', 'capillaries', 'users'));
     }
 

@@ -72,6 +72,7 @@
                                         <table class="table table-bordered">
                                             <tr><th class="bg-light" style="width: 40%;">Jobcard No</th><td>{{ $jobcard->jobcard_number }}</td></tr>
                                             <tr><th class="bg-light">Jobcard Date</th><td>{{ $jobcard->jobcard_date }}</td></tr>
+                                            <tr><th class="bg-light">Bill No / Date</th><td>{{ $jobcard->bill_no ?? '-' }} / {{ $jobcard->bill_date ?? '-' }}</td></tr>
                                             <tr><th class="bg-light">Customer Name</th><td>{{ $jobcard->customer_name }}</td></tr>
                                             <tr><th class="bg-light">Client / Company</th><td>{{ $jobcard->client->name ?? 'N/A' }}</td></tr>
                                             <tr><th class="bg-light">Status</th><td><span class="badge badge-{{ $jobcard->status == 'active' ? 'success' : 'danger' }}">{{ ucfirst($jobcard->status) }}</span></td></tr>

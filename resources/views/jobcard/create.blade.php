@@ -76,6 +76,26 @@
                             </div>
                         </div>
 
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Bill Number</label>
+                                <input type="text" name="bill_no" class="form-control" value="{{ old('bill_no') }}">
+                                @error('bill_no')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Bill Date</label>
+                                <input type="date" name="bill_date" class="form-control" value="{{ old('bill_date') }}">
+                                @error('bill_date')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
                         <div class="col-md-4 mt-3">
                             <div class="form-group">
                                 <label>Receiving Date<span style="color: red">*</span></label>

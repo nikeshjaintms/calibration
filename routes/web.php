@@ -6,8 +6,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('login', function () {
+    return view('login');
+})->name('login');
+
+
+Route::post('login', [App\Http\Controllers\UserController::class, 'makeLogin'])->name('login.submit');
+
 route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('index');
 })->middleware(['auth'])->name('dashboard');
 
 Route::resource('users', App\Http\Controllers\UserController::class);
@@ -27,4 +34,4 @@ Route::resource('inspections', App\Http\Controllers\InspectionController::class)
 Route::resource('oil-fillings', App\Http\Controllers\OilFillingController::class);
 Route::resource('calibrations', App\Http\Controllers\CalibrationController::class);
 
-Route::get('/jobcards/{id}/certificate', [App\Http\Controllers\CertificateController::class, 'generateJobCertificate'])->name('jobcards.certificate');
+Route::get('/certificate/{id}/', [App\Http\Controllers\CertificateController::class, 'generateJobCertificate'])->name('jobcards.certificate');

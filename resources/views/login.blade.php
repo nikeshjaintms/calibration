@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,9 +21,17 @@
         }
 
         @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .login-container {
@@ -65,15 +74,18 @@
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <h2>Admin Login</h2>
-        <form>
+        <form method="POST" action="{{ route('login.submit') }}" id="loginform">
+            @csrf
             <div class="mb-3">
-                <input type="text" class="form-control" placeholder="Username" required>
+                <input type="email" class="form-control" placeholder="Email" required id="email" name="email">
             </div>
             <div class="mb-3">
-                <input type="password" class="form-control" placeholder="Password" required>
+                <input type="password" class="form-control" placeholder="Password" required id="password"
+                    name="password">
             </div>
             <button class="btn btn-primary w-100" type="submit">Login</button>
         </form>
@@ -82,5 +94,41 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#loginform').validate({
+                rules: {
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    password: {
+                        required: true
+                    }
+                },
+                messages: {
+                    email: {
+                        required: "Email is required",
+                        email: "Please enter a valid email address"
+                    },
+                    password: {
+                        required: "Password is required"
+                    }
+                },
+                errorElement: 'div',
+                errorClass: 'text-danger mt-1',
+                highlight: function(element) {
+                    $(element).addClass('is-invalid');
+                },
+                unhighlight: function(element) {
+                    $(element).removeClass('is-invalid');
+                }
+            });
+        });
+    </script>
 </body>
+
 </html>

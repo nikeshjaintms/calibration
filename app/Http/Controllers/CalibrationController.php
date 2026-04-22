@@ -26,8 +26,8 @@ class CalibrationController extends Controller
     public function create(Request $request)
     {
         $jobcard_id = $request->query('jobcard_id');
-        $jobcards = jobcard::all();
-        $users = User::all();
+        $jobcards = jobcard::where('status', 'active')->get();
+        $users = User::where('status', 'active')->get();
         return view('calibration.create', compact('jobcards', 'jobcard_id', 'users'));
     }
 
@@ -140,6 +140,13 @@ class CalibrationController extends Controller
 
             // 👇 Create Calibration
             $calibration = Calibration::create($data);
+
+            if($calibration->result === 'fail') {
+                $calibration->jobcard->update(['status' => 'failed']);
+            }
+            else{
+                $calibration->jobcard->update(['status' => 'completed']);
+            }
 
             // 👇 Save Points
             foreach ($request->points as $point) {

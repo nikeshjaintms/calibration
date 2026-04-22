@@ -43,6 +43,8 @@ class JobcardController extends Controller
             'start_range' => 'required|string|max:255',
             'end_range' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
+            'bill_no' => 'nullable|string|max:255',
+            'bill_date' => 'nullable|date',
         ]);
 
         jobcard::create($request->all());
@@ -93,7 +95,9 @@ class JobcardController extends Controller
             'serial_no' => 'required|string|max:255',
             'start_range' => 'required|string|max:255',
             'end_range' => 'required|string|max:255',
-            'status' => 'required|in:active,inactive',
+            'status' => 'required|in:active,inactive,pending,completed',
+            'bill_no' => 'nullable|string|max:255',
+            'bill_date' => 'nullable|date',
         ]);
 
         $jobcard->update($request->all());
