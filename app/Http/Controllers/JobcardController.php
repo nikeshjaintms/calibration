@@ -44,11 +44,6 @@ class JobcardController extends Controller
             'start_range' => 'required|string|max:255',
             'end_range' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
-            'body_condition' => 'required|in:ok,damage',
-            'display_status' => 'required|in:working,not_working',
-            'motherboard_status' => 'required|in:ok,damage',
-            'power_card_status' => 'required|in:ok,damage',
-            'sensor_status' => 'required|in:ok,damage',
         ]);
 
         if ($validator->fails()) {
@@ -97,11 +92,6 @@ class JobcardController extends Controller
             'start_range' => 'required|string|max:255',
             'end_range' => 'required|string|max:255',
             'status' => 'required|in:active,inactive',
-            'body_condition' => 'required|in:ok,damage',
-            'display_status' => 'required|in:working,not_working',
-            'motherboard_status' => 'required|in:ok,damage',
-            'power_card_status' => 'required|in:ok,damage',
-            'sensor_status' => 'required|in:ok,damage',
         ]);
 
         if ($validator->fails()) {

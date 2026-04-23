@@ -82,6 +82,9 @@
                                                         <a href="{{ route('inspections.edit', $inspection->id) }}" class="btn btn-link btn-primary" data-bs-toggle="tooltip" title="Edit">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
+                                                        <a href="{{ route('inspections.pdf', $inspection->id) }}" class="btn btn-link btn-success" data-bs-toggle="tooltip" title="Download PDF" target="_blank">
+                                                            <i class="fas fa-file-pdf"></i>
+                                                        </a>
                                                         <button onclick="delete_inspection({{ $inspection->id }})" class="btn btn-link btn-danger" data-bs-toggle="tooltip" title="Delete">
                                                             <i class="fa fa-trash"></i>
                                                         </button>

@@ -136,4 +136,15 @@ class InspectionController extends Controller
 
         return redirect()->route('inspections.index')->with('success', 'Inspection deleted successfully.');
     }
+
+    public function generatePdf($id)
+    {
+        $inspection = Inspection::with('jobcard.client')->findOrFail($id);
+        $jobcard = $inspection->jobcard;
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.inspection_certificate', compact('jobcard', 'inspection'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->stream("Inspection_Certificate_{$jobcard->jobcard_number}.pdf");
+    }
 }

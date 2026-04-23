@@ -18,12 +18,18 @@ class UserController extends Controller
             'password' => 'required|string',
         ]);
 
+        \Illuminate\Support\Facades\Log::info('Login Attempt', [
+            'email' => $request->email,
+            'password_length' => strlen($request->password)
+        ]);
+
         if (auth()->attempt($request->only('email', 'password'))) {
+            \Illuminate\Support\Facades\Log::info('Login Success');
             return redirect()->route('dashboard')->with('success', 'Logged in successfully.');
         }
 
+        \Illuminate\Support\Facades\Log::info('Login Failed');
         return back()->withErrors(['email' => 'Invalid credentials.'])->withInput();
-
     }
     public function logout()
     {

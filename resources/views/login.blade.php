@@ -80,6 +80,15 @@
         <h2>Admin Login</h2>
         <form method="POST" action="{{ route('login.submit') }}" id="loginform">
             @csrf
+            @if ($errors->any())
+                <div class="alert alert-danger p-2 mb-3 text-start">
+                    <ul class="mb-0">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="mb-3">
                 <input type="email" class="form-control" placeholder="Email" required id="email" name="email">
             </div>

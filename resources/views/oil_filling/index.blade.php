@@ -60,6 +60,9 @@
                                                     <a href="{{ route('oil-fillings.edit', $item->id) }}" class="btn btn-link btn-primary" data-bs-toggle="tooltip" title="Edit">
                                                         <i class="fa fa-edit"></i>
                                                     </a>
+                                                    <a href="{{ route('oil-fillings.pdf', $item->id) }}" class="btn btn-link btn-success" data-bs-toggle="tooltip" title="Download PDF" target="_blank">
+                                                        <i class="fas fa-file-pdf"></i>
+                                                    </a>
                                                     <button onclick="delete_oil_filling({{ $item->id }})" class="btn btn-link btn-danger" data-bs-toggle="tooltip" title="Delete">
                                                         <i class="fa fa-trash"></i>
                                                     </button>

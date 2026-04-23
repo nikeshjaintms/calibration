@@ -131,4 +131,22 @@ class OilFillingController extends Controller
 
         return redirect()->route('oil-fillings.index')->with('success', 'Oil Filling record deleted successfully.');
     }
+
+    public function generatePdf($id)
+    {
+        $oil_filling = OilFilling::with([
+            'jobcard.client', 
+            'jobcard.inspections', 
+            'moc', 
+            'flange', 
+            'capillary'
+        ])->findOrFail($id);
+        
+        $jobcard = $oil_filling->jobcard;
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.oil_filling_certificate', compact('jobcard', 'oil_filling'))
+            ->setPaper('a4', 'portrait');
+
+        return $pdf->stream("Oil_Filling_Certificate_{$jobcard->jobcard_number}.pdf");
+    }
 }

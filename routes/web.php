@@ -28,7 +28,9 @@ Route::middleware(['auth'])->group(function () {
     // Operation Module start
     Route::resource('jobcards', App\Http\Controllers\JobcardController::class);
     Route::resource('inspections', App\Http\Controllers\InspectionController::class);
+    Route::get('inspections/{id}/pdf', [App\Http\Controllers\InspectionController::class, 'generatePdf'])->name('inspections.pdf');
     Route::resource('oil-fillings', App\Http\Controllers\OilFillingController::class);
+    Route::get('oil-fillings/{id}/pdf', [App\Http\Controllers\OilFillingController::class, 'generatePdf'])->name('oil-fillings.pdf');
     Route::resource('calibrations', App\Http\Controllers\CalibrationController::class);
 
     Route::get('/certificate/{id}/', [App\Http\Controllers\CertificateController::class, 'generateJobCertificate'])->name('jobcards.certificate');
