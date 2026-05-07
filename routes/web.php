@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Route::get('login', function () {
     return view('login');
@@ -13,11 +13,11 @@ Route::get('login', function () {
 Route::post('login', [App\Http\Controllers\UserController::class, 'makeLogin'])->name('login.submit');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [App\Http\Controllers\UserController::class, 'logout'])->name('logout');
 
     Route::resource('users', App\Http\Controllers\UserController::class);
-    
+
     // Master Module start
     Route::resource('clients', App\Http\Controllers\ClientsController::class);
     Route::resource('mocs', App\Http\Controllers\MOCController::class);
