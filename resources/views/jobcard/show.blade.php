@@ -134,7 +134,7 @@
                                             <div class="col-md-6">
                                                 <table class="table table-bordered">
                                                     <tr><th class="bg-light" style="width: 40%;">MOC</th><td>{{ $jobcard->oil_filling->moc->name ?? 'N/A' }}</td></tr>
-                                                    <tr><th class="bg-light">Flange</th><td>{{ $jobcard->oil_filling->flange->name ?? 'N/A' }} {{ "Siz: ". $jobcard->oil_filling->flange->size ?? 'N/A' }}</td></tr>
+                                                    <tr><th class="bg-light">Flange</th><td>{{ $jobcard->oil_filling->flange->name ?? 'N/A' }} <strong>Size:</strong>{{$jobcard->oil_filling->flange->size ?? 'N/A' }}</td></tr>
                                                     <tr><th class="bg-light">Capillary</th><td>{{ $jobcard->oil_filling->capillary->name ?? 'N/A' }}</td></tr>
                                                 </table>
                                             </div>
