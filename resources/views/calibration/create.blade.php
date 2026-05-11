@@ -40,8 +40,8 @@
                                 <select name="jobcard_id" id="jobcard_id" class="form-select" required>
                                     <option value="">Select Jobcard</option>
                                     @foreach($jobcards as $jobcard)
-                                    <option value="{{ $jobcard->id }}" 
-                                        data-start="{{ $jobcard->start_range }}" 
+                                    <option value="{{ $jobcard->id }}"
+                                        data-start="{{ $jobcard->start_range }}"
                                         data-end="{{ $jobcard->end_range }}"
                                         {{ (isset($jobcard_id) && $jobcard_id == $jobcard->id) || old('jobcard_id') == $jobcard->id ? 'selected' : '' }}>
                                         {{ $jobcard->jobcard_number }} - {{ $jobcard->customer_name }}
@@ -89,24 +89,14 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4 mt-3">
-                            <div class="form-group">
-                                <label>Certificate Number<span style="color: red">*</span></label>
-                                <input type="text" name="certificate_number" class="form-control" placeholder="e.g. CERT/2026/001" value="{{ old('certificate_number') }}" required>
-                                @error('certificate_number')
-                                <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="col-md-2 mt-3">
+                        <div class="col-md-3 mt-3">
                             <div class="form-group">
                                 <label>Temp (°C)</label>
                                 <input type="text" name="temperature" class="form-control" placeholder="25" value="{{ old('temperature') }}">
                             </div>
                         </div>
 
-                        <div class="col-md-2 mt-3">
+                        <div class="col-md-3 mt-3">
                             <div class="form-group">
                                 <label>Humidity (%)</label>
                                 <input type="text" name="humidity" class="form-control" placeholder="50" value="{{ old('humidity') }}">
@@ -199,7 +189,7 @@
             let start = parseFloat(selected.data('start')) || 0;
             let end = parseFloat(selected.data('end')) || 0;
             let span = end - start;
-            
+
             // Calculate 5 equal points
             let expectedPoints = [
                 start,
@@ -262,7 +252,7 @@
 
             // Use As Left if present, else As Found
             let valToUse = !isNaN(left) ? left : (!isNaN(found) ? found : null);
-            
+
             if (valToUse === null) {
                 row.find('.error-val').val("");
                 row.find('.error-pct').val("");

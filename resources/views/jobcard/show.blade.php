@@ -127,9 +127,31 @@
                             <!-- Diaphragm Tab -->
                             <div class="tab-pane fade" id="diaphragm" role="tabpanel">
                                 <div class="text-center py-5">
-                                    <i class="fas fa-layer-group fa-3x text-muted mb-3"></i>
+                                    {{-- <i class="fas fa-layer-group fa-3x text-muted mb-3"></i> --}}
                                     <h5>Diaphragm Details</h5>
-                                    <p class="text-muted">No specific data model for Diaphragm found. This section can be used for related technical data.</p>
+                                     @if($jobcard->oil_filling)
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                <table class="table table-bordered">
+                                                    <tr><th class="bg-light" style="width: 40%;">MOC</th><td>{{ $jobcard->oil_filling->moc->name ?? 'N/A' }}</td></tr>
+                                                    <tr><th class="bg-light">Flange</th><td>{{ $jobcard->oil_filling->flange->name ?? 'N/A' }} </td></tr>
+                                                    <tr><th class="bg-light">Size</th><td>{{ $jobcard->oil_filling->flange->size ?? 'N/A' }}</td></tr>
+                                                    <tr><th class="bg-light">Capillary</th><td>{{ $jobcard->oil_filling->capillary->name ?? 'N/A' }}</td></tr>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <p><strong>Filled By:</strong> {{ $jobcard->oil_filling->filled_by }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <a href="{{ route('oil-fillings.edit', $jobcard->oil_filling->id) }}" class="btn btn-info btn-sm">Edit Oil Filling</a>
+                                        </div>
+                                        @else
+                                        <div class="text-center py-5">
+                                            <p class="text-muted">No specific data model for Diaphragm found. This section can be used for related technical data.</p>
+                                            <a href="{{ route('oil-fillings.create', ['jobcard_id' => $jobcard->id]) }}" class="btn btn-primary btn-sm">Add Oil Filling</a>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
 

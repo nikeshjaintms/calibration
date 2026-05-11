@@ -5,109 +5,196 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
-        body {
+        * {
             margin: 0;
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1e3c72, #2a5298, #4e4376);
-            background-size: 400% 400%;
-            animation: gradientShift 10s ease infinite;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .main-container {
             display: flex;
             height: 100vh;
-            align-items: center;
+        }
+
+        /* LEFT SIDE */
+        .left-side {
+            width: 50%;
+            background: #f5f5f5;
+            display: flex;
             justify-content: center;
-            color: #fff;
+            align-items: center;
+            flex-direction: column;
         }
 
-        @keyframes gradientShift {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
+        .left-side img {
+            width: 250px;
+            margin-bottom: 15px;
         }
 
-        .login-container {
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        .left-side h2 {
+            font-size: 32px;
+            color: #111;
+            font-weight: 600;
+        }
+
+        .left-side p {
+            color: #666;
+            font-size: 15px;
+        }
+
+        /* RIGHT SIDE */
+        .right-side {
+            width: 50%;
+            background: linear-gradient(135deg, #0047ff, #005eff);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .login-box {
+            width: 360px;
             padding: 40px;
-            width: 400px;
-            max-width: 90%;
-            text-align: center;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
         }
 
-        .login-container h2 {
-            margin-bottom: 20px;
-            font-size: 2rem;
-        }
-
-        .btn {
-            background: linear-gradient(45deg, #ff7f50, #ff4500);
+        .login-box h3 {
             color: #fff;
-            font-size: 1rem;
-            cursor: pointer;
+            text-align: center;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #fff;
+            height: 45px;
+        }
+
+        .form-control::placeholder {
+            color: #e5e5e5;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.25);
+            color: #fff;
+            box-shadow: none;
+            border: 1px solid #fff;
+        }
+
+        .btn-login {
+            width: 100%;
+            background: #00c6ff;
+            border: none;
+            height: 45px;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 6px;
             transition: 0.3s;
         }
 
-        .btn:hover {
-            background: linear-gradient(45deg, #ff6347, #ff8c00);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(255, 140, 0, 0.3);
+        .btn-login:hover {
+            background: #00aee6;
         }
 
-        .extras a {
-            color: #ffa07a;
-            text-decoration: none;
-            transition: 0.3s;
+        /* ERROR MESSAGE */
+        label.error {
+            color: #ffb3b3;
+            font-size: 13px;
+            margin-top: 5px;
+            display: block;
+            text-align: left;
         }
 
-        .extras a:hover {
-            text-decoration: underline;
+        .form-control.is-invalid {
+            border: 1px solid #ff4d4d;
+        }
+
+        @media(max-width: 768px) {
+            .left-side {
+                display: none;
+            }
+
+            .right-side {
+                width: 100%;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="login-container">
-        <h2>Admin Login</h2>
-        <form method="POST" action="{{ route('login.submit') }}" id="loginform">
-            @csrf
-            @if ($errors->any())
-                <div class="alert alert-danger p-2 mb-3 text-start">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
-            <div class="mb-3">
-                <input type="email" class="form-control" placeholder="Email" required id="email" name="email">
-            </div>
-            <div class="mb-3">
-                <input type="password" class="form-control" placeholder="Password" required id="password"
-                    name="password">
-            </div>
-            <button class="btn btn-primary w-100" type="submit">Login</button>
-        </form>
-        <div class="extras mt-3">
-            <a href="#">Forgot Password?</a>
-        </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <div class="main-container">
+
+        <!-- LEFT -->
+        <div class="left-side">
+            <!-- Replace with your logo -->
+            <img src="{{ asset('logo/image.png') }}" alt="Logo">
+
+            <h2>Welcome to AUTOMAC</h2>
+            <p>Excellence in Technology Solutions</p>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="right-side">
+
+            <div class="login-box">
+
+                <h3>Admin Login</h3>
+
+                <form method="POST" action="{{ route('login.submit') }}" id="loginform">
+                    @csrf
+
+                    <div class="mb-3">
+                        <input type="email"
+                            class="form-control"
+                            placeholder="Email"
+                            id="email"
+                            name="email">
+                    </div>
+
+                    <div class="mb-3">
+                        <input type="password"
+                            class="form-control"
+                            placeholder="Password"
+                            id="password"
+                            name="password">
+                    </div>
+
+                    <button type="submit" class="btn-login">
+                        Login
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+
     <script>
         $(document).ready(function() {
+
             $('#loginform').validate({
                 rules: {
                     email: {
@@ -115,29 +202,37 @@
                         email: true
                     },
                     password: {
-                        required: true
+                        required: true,
+                        minlength: 6
                     }
                 },
+
                 messages: {
                     email: {
-                        required: "Email is required",
-                        email: "Please enter a valid email address"
+                        required: "Please enter your email",
+                        email: "Enter a valid email address"
                     },
+
                     password: {
-                        required: "Password is required"
+                        required: "Please enter your password",
+                        minlength: "Password must be at least 6 characters"
                     }
                 },
-                errorElement: 'div',
-                errorClass: 'text-danger mt-1',
+
+                errorElement: 'label',
+
                 highlight: function(element) {
                     $(element).addClass('is-invalid');
                 },
+
                 unhighlight: function(element) {
                     $(element).removeClass('is-invalid');
                 }
             });
+
         });
     </script>
+
 </body>
 
 </html>
