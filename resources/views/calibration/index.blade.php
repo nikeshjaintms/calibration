@@ -49,8 +49,8 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ \Carbon\Carbon::parse($calibration->date)->format('d/m/Y') }}</td>
-                                        <td>{{ $calibration->jobcard->jobcard_number ?? 'N/A' }}</td>
-                                        <td>{{ $calibration->jobcard->customer_name ?? 'N/A' }}</td>
+                                        <td>{{ $calibration->jobcard->jobcard_number }}</td>
+                                        <td>{{ $calibration->jobcard->customer_name }}</td>
                                         <td>{{ $calibration->instrument }}</td>
                                         <td>{{ $calibration->certificate_number }}</td>
                                         <td>
@@ -62,16 +62,13 @@
                                         </td>
                                         <td>
                                             <div class="form-button-action">
-                                                <a href="{{ route('jobcards.certificate', $calibration->jobcard_id) }}" class="btn btn-link btn-success" data-bs-toggle="tooltip" title="Print PDF" target="_blank">
-                                                    <i class="fa fa-file-pdf"></i>
-                                                </a>
                                                 <a href="{{ route('calibrations.show', $calibration->id) }}" class="btn btn-link btn-info" data-bs-toggle="tooltip" title="View">
                                                     <i class="fa fa-eye"></i>
                                                 </a>
                                                 <a href="{{ route('calibrations.edit', $calibration->id) }}" class="btn btn-link btn-primary" data-bs-toggle="tooltip" title="Edit">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
-                                                <button type="button" onclick="deleteCalibration({{ $calibration->id }})" class="btn btn-link btn-danger" data-bs-toggle="tooltip" title="Delete">
+                                                <button type="button" onclick="deleteCalibration('{{ $calibration->id }}')" class="btn btn-link btn-danger" data-bs-toggle="tooltip" title="Delete">
                                                     <i class="fa fa-times"></i>
                                                 </button>
                                             </div>
