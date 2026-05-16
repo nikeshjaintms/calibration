@@ -9,7 +9,7 @@
             font-family: 'Helvetica', 'Arial', sans-serif;
             font-size: 12px;
             color: #333;
-            line-height: 1.4;
+            line-height: 1.2;
         }
 
         .container {
