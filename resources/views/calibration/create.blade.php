@@ -355,17 +355,14 @@
             let left = parseFloat(row.find('.left-val').val());
             let found = parseFloat(row.find('.found-val').val());
 
-            // Use As Left if present, else As Found
-            let valToUse = !isNaN(left) ? left : (!isNaN(found) ? found : null);
-
-            if (valToUse === null) {
+            if (isNaN(left) || isNaN(found)) {
                 row.find('.error-val').val("");
                 row.find('.error-pct').val("");
                 return;
             }
 
-            // Error = As Left - Expected
-            let error = valToUse - expected;
+            // Error = As Found - As Left
+            let error = found - left;
             row.find('.error-val').val(error.toFixed(2));
 
             // Error % = (Error / Expected) * 100
@@ -388,6 +385,11 @@
         if ($('#jobcard_id').val() !== "" && $('#pointsTable tbody tr').length === 0) {
             $('#jobcard_id').trigger('change');
         }
+
+        // Recalculate errors when form is reloaded with old input
+        $('#pointsTable tbody tr').each(function() {
+            calculateRow($(this));
+        });
     });
 </script>
 
