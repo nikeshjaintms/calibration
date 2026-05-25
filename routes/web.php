@@ -29,6 +29,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('jobcards', App\Http\Controllers\JobcardController::class);
     Route::resource('inspections', App\Http\Controllers\InspectionController::class);
     Route::resource('oil-fillings', App\Http\Controllers\OilFillingController::class);
+    Route::get('calibrations/jobcard-details/{id}', [App\Http\Controllers\CalibrationController::class, 'getJobcardDetails'])->name('calibrations.jobcard-details');
     Route::resource('calibrations', App\Http\Controllers\CalibrationController::class);
 
     Route::get('/certificate/{id}/', [App\Http\Controllers\CertificateController::class, 'generateJobCertificate'])->name('jobcards.certificate');
