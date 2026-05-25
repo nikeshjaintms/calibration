@@ -33,6 +33,15 @@
                 @csrf
 
                 <div class="card-body">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group">
@@ -100,6 +109,80 @@
                             <div class="form-group">
                                 <label>Humidity (%)</label>
                                 <input type="text" name="humidity" class="form-control" placeholder="50" value="{{ old('humidity') }}">
+                            </div>
+                        </div>
+
+                        <!-- NEW FIELDS ROW 1 -->
+                        <div class="col-md-4 mt-3">
+                            <div class="form-group">
+                                <label>PO Number</label>
+                                <input type="text" name="po_no" id="po_no" class="form-control" placeholder="e.g. 2026101402" value="{{ old('po_no') }}">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mt-3">
+                            <div class="form-group">
+                                <label>PO Date</label>
+                                <input type="date" name="po_date" id="po_date" class="form-control" value="{{ old('po_date') }}">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mt-3">
+                            <div class="form-group">
+                                <label>Pressure Unit</label>
+                                <input type="text" name="pressure_unit" id="pressure_unit" class="form-control" placeholder="e.g. MMWC" value="{{ old('pressure_unit', 'MMWC') }}">
+                            </div>
+                        </div>
+
+                        <!-- NEW FIELDS ROW 2 -->
+                        <div class="col-md-4 mt-3">
+                            <div class="form-group">
+                                <label>Warranty</label>
+                                <input type="text" name="warranty" id="warranty" class="form-control" placeholder="e.g. 12 MONTHS" value="{{ old('warranty', '12 MONTHS') }}">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mt-3">
+                            <div class="form-group">
+                                <label>Warranty Due Date</label>
+                                <input type="date" name="warranty_due_date" id="warranty_due_date" class="form-control" value="{{ old('warranty_due_date') }}">
+                            </div>
+                        </div>
+
+                        <!-- NEW FIELDS ROW 3 -->
+                        <div class="col-md-4 mt-3">
+                            <div class="form-group">
+                                <label>Master Accuracy</label>
+                                <input type="text" name="master_accuracy" id="master_accuracy" class="form-control" placeholder="e.g. ± 0.0003%" value="{{ old('master_accuracy', '± 0.0003%') }}">
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mt-3">
+                            <div class="form-group">
+                                <label>Calibration Method</label>
+                                <input type="text" name="calibration_method" id="calibration_method" class="form-control" placeholder="e.g. Compression" value="{{ old('calibration_method', 'Compression') }}">
+                            </div>
+                        </div>
+
+                        <div class="col-md-8 mt-3">
+                            <div class="form-group">
+                                <label>Hart / Field Communicator Make</label>
+                                <input type="text" name="communicator_make" id="communicator_make" class="form-control" placeholder="e.g. Prisys (Brazil), SKE, Automac, Siemens" value="{{ old('communicator_make', 'Prisys (Brazil), SKE, Automac, Siemens') }}">
+                            </div>
+                        </div>
+
+                        <!-- NEW FIELDS ROW 4 -->
+                        <div class="col-md-12 mt-3">
+                            <div class="form-group">
+                                <label>Activity</label>
+                                <input type="text" name="activity" id="activity" class="form-control" placeholder="e.g. Transmitter Health check, '0' set..." value="{{ old('activity', 'Transmitter Health check, \'0\' set, Range setting, Linearity check, Output check') }}">
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 mt-3">
+                            <div class="form-group">
+                                <label>Work Details</label>
+                                <textarea name="work_details" id="work_details" class="form-control" rows="3" placeholder="Flange, Capillary and MOC details...">{{ old('work_details') }}</textarea>
                             </div>
                         </div>
                     </div>
@@ -183,12 +266,16 @@
     $(document).ready(function() {
        let rowIdx = Number("{{ count(old('points', [])) }}");
 
-        // Auto-generate rows on Jobcard change
+        // Auto-generate rows and fetch details on Jobcard change
         $('#jobcard_id').change(function() {
             let selected = $(this).find('option:selected');
             if (selected.val() === "") {
                 $('#dynamicSection').hide();
                 $('#pointsTable tbody').empty();
+                $('#po_no').val('');
+                $('#po_date').val('');
+                $('#work_details').val('');
+                $('#warranty_due_date').val('');
                 return;
             }
 
@@ -222,6 +309,32 @@
                 `;
                 $('#pointsTable tbody').append(newRow);
                 rowIdx++;
+            });
+
+            // Fetch Jobcard dynamic details via AJAX
+            let jobcardId = selected.val();
+            $.ajax({
+                url: `/calibrations/jobcard-details/${jobcardId}`,
+                type: 'GET',
+                success: function(response) {
+                    if(response.default_work_details) {
+                        $('#work_details').val(response.default_work_details);
+                    }
+                    // Auto-calculate warranty due date based on order/receiving date + 1 year (as default)
+                    let orderDate = response.jobcard.jobcard_date;
+                    if(orderDate) {
+                        let dateObj = new Date(orderDate);
+                        dateObj.setFullYear(dateObj.getFullYear() + 1);
+                        dateObj.setDate(dateObj.getDate() - 1);
+                        let dd = String(dateObj.getDate()).padStart(2, '0');
+                        let mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+                        let yyyy = dateObj.getFullYear();
+                        $('#warranty_due_date').val(`${yyyy}-${mm}-${dd}`);
+                    }
+                },
+                error: function(err) {
+                    console.error("Error fetching jobcard details:", err);
+                }
             });
         });
 

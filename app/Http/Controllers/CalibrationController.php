@@ -85,13 +85,23 @@ class CalibrationController extends Controller
             'temperature' => 'nullable|string',
             'humidity' => 'nullable|string',
             'result' => 'required|in:pass,fail',
+            'po_no' => 'nullable|string',
+            'po_date' => 'nullable|date',
+            'warranty' => 'nullable|string',
+            'warranty_due_date' => 'nullable|date',
+            'pressure_unit' => 'nullable|string',
+            'master_accuracy' => 'nullable|string',
+            'calibration_method' => 'nullable|string',
+            'communicator_make' => 'nullable|string',
+            'activity' => 'nullable|string',
+            'work_details' => 'nullable|string',
             'points' => 'required|array|min:1',
             'points.*.set_point_percentage' => 'nullable|string',
-            'points.*.expected' => 'required|numeric',
-            'points.*.as_found' => 'nullable|numeric',
-            'points.*.as_left' => 'nullable|numeric',
-            'points.*.error' => 'nullable|numeric',
-            'points.*.error_percentage' => 'nullable|numeric',
+            'points.*.expected' => 'required|numeric|max:9999999999|min:-9999999999',
+            'points.*.as_found' => 'nullable|numeric|max:9999999999|min:-9999999999',
+            'points.*.as_left' => 'nullable|numeric|max:9999999999|min:-9999999999',
+            'points.*.error' => 'nullable|numeric|max:9999999999|min:-9999999999',
+            'points.*.error_percentage' => 'nullable|numeric|max:9999999999|min:-9999999999',
         ]);
 
         DB::transaction(function () use ($request) {
@@ -193,13 +203,23 @@ class CalibrationController extends Controller
             'temperature' => 'nullable|string',
             'humidity' => 'nullable|string',
             'result' => 'required|in:pass,fail',
+            'po_no' => 'nullable|string',
+            'po_date' => 'nullable|date',
+            'warranty' => 'nullable|string',
+            'warranty_due_date' => 'nullable|date',
+            'pressure_unit' => 'nullable|string',
+            'master_accuracy' => 'nullable|string',
+            'calibration_method' => 'nullable|string',
+            'communicator_make' => 'nullable|string',
+            'activity' => 'nullable|string',
+            'work_details' => 'nullable|string',
             'points' => 'required|array|min:1',
             'points.*.set_point_percentage' => 'nullable|string',
-            'points.*.expected' => 'required|numeric',
-            'points.*.as_found' => 'nullable|numeric',
-            'points.*.as_left' => 'nullable|numeric',
-            'points.*.error' => 'nullable|numeric',
-            'points.*.error_percentage' => 'nullable|numeric',
+            'points.*.expected' => 'required|numeric|max:9999999999|min:-9999999999',
+            'points.*.as_found' => 'nullable|numeric|max:9999999999|min:-9999999999',
+            'points.*.as_left' => 'nullable|numeric|max:9999999999|min:-9999999999',
+            'points.*.error' => 'nullable|numeric|max:9999999999|min:-9999999999',
+            'points.*.error_percentage' => 'nullable|numeric|max:9999999999|min:-9999999999',
         ]);
 
         DB::transaction(function () use ($request, $calibration) {
@@ -239,5 +259,38 @@ class CalibrationController extends Controller
         }
 
         return redirect()->route('calibrations.index')->with('success', 'Calibration record deleted successfully.');
+    }
+
+    public function getJobcardDetails($id)
+    {
+        $jobcard = jobcard::with([
+            'client',
+            'oil_filling.moc',
+            'oil_filling.flange',
+            'oil_filling.capillary',
+            'inspections'
+        ])->findOrFail($id);
+
+        $flange = $jobcard->oil_filling->flange->name ?? '';
+        $flangeMoc = $jobcard->oil_filling->moc->name ?? '';
+        $diaphragmMoc = $jobcard->oil_filling->moc->name ?? '';
+        $capillary = $jobcard->oil_filling->capillary->name ?? '';
+
+        $flangeStr = $flange ? "FLANGE : $flange" : "";
+        $flangeMocStr = $flangeMoc ? "Flange MOC : $flangeMoc" : "";
+        $diaphragmMocStr = $diaphragmMoc ? "Diaphragm MOC : $diaphragmMoc" : "";
+        $capillaryStr = $capillary ? "with $capillary capillary ( BOTH SIDE )" : "";
+
+        $parts = array_filter([$flangeStr, $flangeMocStr, $diaphragmMocStr]);
+        $workDetails = implode(', ', $parts);
+        if ($capillaryStr) {
+            $workDetails .= " " . $capillaryStr;
+        }
+
+        return response()->json([
+            'jobcard' => $jobcard,
+            'default_work_details' => $workDetails,
+            'client_name' => $jobcard->client->company ?? $jobcard->client->name ?? $jobcard->customer_name
+        ]);
     }
 }

@@ -51,4 +51,6 @@ return new class extends Migration
             $table->enum('sensor_status', ['ok', 'damage'])->default('ok');
         });
     }
-};
+}; 
+ 
+
