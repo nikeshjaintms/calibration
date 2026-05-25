@@ -256,7 +256,7 @@
                 <div style="font-size: 11px; font-weight: bold; font-family: 'Helvetica', Arial, sans-serif; padding-left: 5px;">Calibration by</div>
             </td>
             <td style="width: 50%; text-align: right; vertical-align: bottom;">
-                
+
             </td>
         </tr>
     </table>

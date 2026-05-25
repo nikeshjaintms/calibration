@@ -198,12 +198,15 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-12 mt-3">
-                                <div class="form-group">
-                                    <label>Work Details</label>
-                                    <textarea name="work_details" id="work_details" class="form-control" rows="3" placeholder="Flange, Capillary and MOC details...">{{ old('work_details', $calibration->work_details) }}</textarea>
-                                </div>
-                            </div>
+                            <textarea
+    name="work_details"
+    id="work_details"
+    class="form-control"
+    rows="3"
+    placeholder="Flange, Capillary and MOC details..."
+    readonly
+    style="background:#f5f5f5;"
+>{{ old('work_details', $calibration->work_details) }}</textarea>
                         </div>
 
                         <hr class="mt-4 mb-4">
