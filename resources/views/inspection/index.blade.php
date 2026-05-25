@@ -47,8 +47,8 @@
                                         @forelse($inspections as $index => $inspection)
                                             <tr>
                                                 <td>{{ $index + 1 }}</td>
-                                                <td>{{ $inspection->jobcard->jobcard_number ?? 'N/A' }}</td>
-                                                <td>{{ $inspection->jobcard->customer_name ?? 'N/A' }}</td>
+                                                <td>{{ $inspection->jobcard->jobcard_number }}</td>
+                                                <td>{{ $inspection->jobcard->customer_name }}</td>
                                                 <td>
                                                     <span class="badge badge-{{ $inspection->body_condition == 'ok' ? 'success' : 'danger' }}">
                                                         {{ ucfirst($inspection->body_condition) }}
@@ -82,7 +82,7 @@
                                                         <a href="{{ route('inspections.edit', $inspection->id) }}" class="btn btn-link btn-primary" data-bs-toggle="tooltip" title="Edit">
                                                             <i class="fa fa-edit"></i>
                                                         </a>
-                                                        <button onclick="delete_inspection({{ $inspection->id }})" class="btn btn-link btn-danger" data-bs-toggle="tooltip" title="Delete">
+                                                        <button onclick="delete_inspection('{{ $inspection->id }}')" class="btn btn-link btn-danger" data-bs-toggle="tooltip" title="Delete">
                                                             <i class="fa fa-trash"></i>
                                                         </button>
                                                     </div>
@@ -106,6 +106,7 @@
 @endsection
 
 @section('footer-script')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>

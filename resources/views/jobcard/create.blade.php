@@ -32,6 +32,16 @@
 
             <form method="POST" action="{{ route('jobcards.store') }}" id="jobcardForm">
                 @csrf
+                
+                @if ($errors->any())
+                    <div class="alert alert-danger m-3">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 <div class="card-body">
                     <div class="row">
