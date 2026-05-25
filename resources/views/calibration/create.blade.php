@@ -179,12 +179,15 @@
                             </div>
                         </div>
 
-                        <div class="col-md-12 mt-3">
-                            <div class="form-group">
-                                <label>Work Details</label>
-                                <textarea name="work_details" id="work_details" class="form-control" rows="3" placeholder="Flange, Capillary and MOC details...">{{ old('work_details') }}</textarea>
-                            </div>
-                        </div>
+                       <textarea
+    name="work_details"
+    id="work_details"
+    class="form-control"
+    rows="3"
+    placeholder="Flange, Capillary and MOC details..."
+    readonly
+    style="background:#f5f5f5;"
+>{{ old('work_details') }}</textarea>
                     </div>
 
                     <hr class="mt-4 mb-4">
@@ -194,7 +197,7 @@
                             <div class="col-md-12">
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h4 class="fw-bold mb-0">Calibration Points</h4>
-                                    
+
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-bordered" id="pointsTable">
@@ -338,8 +341,8 @@
             });
         });
 
-       
-        
+
+
 
         // Calculations
         $(document).on('input', '.found-val, .left-val, .expected-val', function() {
