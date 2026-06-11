@@ -24,7 +24,7 @@ class InspectionController extends Controller
     public function create(Request $request)
     {
         $jobcard_id = $request->query('jobcard_id');
-        $jobcards = jobcard::where('status', 'active')->get();
+        $jobcards = jobcard::all();
         return view('inspection.create', compact('jobcards', 'jobcard_id'));
     }
 

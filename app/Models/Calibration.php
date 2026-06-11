@@ -15,7 +15,17 @@ class Calibration extends Model
         'certificate_number',
         'temperature',
         'humidity',
-        'result'
+        'result',
+        'po_no',
+        'po_date',
+        'warranty',
+        'warranty_due_date',
+        'pressure_unit',
+        'master_accuracy',
+        'calibration_method',
+        'communicator_make',
+        'activity',
+        'work_details'
     ];
 
     public function jobcard()

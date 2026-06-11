@@ -73,32 +73,70 @@
                             </div>
                         </div>
 
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped">
-                                <thead class="bg-light">
-                                    <tr>
-                                        <th>Set Point %</th>
-                                        <th>Expected Value</th>
-                                        <th>As Found</th>
-                                        <th>As Left</th>
-                                        <th>Error</th>
-                                        <th>Error %</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($calibration->points as $point)
-                                    <tr>
-                                        <td>{{ $point->set_point_percentage }}</td>
-                                        <td>{{ $point->expected }}</td>
-                                        <td>{{ $point->as_found ?? '-' }}</td>
-                                        <td>{{ $point->as_left ?? '-' }}</td>
-                                        <td>{{ $point->error }}</td>
-                                        <td>{{ number_format($point->error_percentage, 4) }} %</td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                        @php
+                            $points = $calibration->points;
+                            $has_found = $points->contains(fn($p) => !is_null($p->as_found));
+    
+                        @endphp
+
+                        @if ($has_found)
+                        <div class="mb-4">
+                            <h5 class="fw-bold mb-3 text-primary">Calibration Details (Pre-Calibration)</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped text-center align-middle">
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th>Cycle</th>
+                                            <th>TEST POINT IN %</th>
+                                            <th>Input Pressure</th>
+                                            <th>Unit</th>
+                                            <th>Desired Output mA</th>
+                                            <th>Measured mA</th>
+                                            <th>Error</th>
+                                            <th>% Error(FS)</th>
+                                            <th>Status (P/F)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($points as $index => $point)
+                                            @php
+                                                $pct = (float) str_replace('%', '', $point->set_point_percentage);
+                                                $desired = 4.0 + ($pct / 100.0) * 16.0;
+                                                $measured = $point->as_found;
+                                                $error = $measured !== null ? ($measured - $desired) : null;
+                                                $error_fs = $error !== null ? (($error / 16.0) * 100.0) : null;
+                                                $rounded_error_fs = $error_fs !== null ? round($error_fs, 4, PHP_ROUND_HALF_EVEN) : null;
+                                                $status = 'PASS';
+                                            @endphp
+                                            <tr>
+                                                @if($index === 0)
+                                                    <td rowspan="5" class="fw-bold bg-light align-middle" style="writing-mode: vertical-rl; transform: rotate(180deg); width: 40px;">Increment Cycle</td>
+                                                @endif
+                                                <td>{{ number_format($pct, 2) }}</td>
+                                                <td>{{ $point->expected == 0 ? '0' : number_format($point->expected, 4) }}</td>
+                                                <td>{{ $calibration->pressure_unit ?? 'MMWC' }}</td>
+                                                <td>{{ number_format($desired, 3) }}</td>
+                                                <td>{{ $measured !== null ? number_format($measured, 3) : '-' }}</td>
+                                                <td>{{ $error !== null ? number_format($error, 3) : '-' }}</td>
+                                                <td>{{ $rounded_error_fs !== null ? number_format($rounded_error_fs, 4) : '-' }}</td>
+                                                <td>
+                                                    @if($status === 'PASS')
+                                                        <span class="badge badge-success">PASS</span>
+                                                    @elseif($status === 'FAIL')
+                                                        <span class="badge badge-danger">FAIL</span>
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
+                        @endif
+
+                        
                     </div>
                     <div class="card-footer text-muted">
                         Generated on {{ date('d/m/Y H:i') }}

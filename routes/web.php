@@ -10,7 +10,6 @@ Route::get('login', function () {
     return view('login');
 })->name('login');
 
-
 Route::post('login', [App\Http\Controllers\UserController::class, 'makeLogin'])->name('login.submit');
 
 Route::middleware(['auth'])->group(function () {
@@ -26,22 +25,12 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('capillaries', App\Http\Controllers\CapillaryController::class);
     // Master Module end
 
-Route::resource('users', App\Http\Controllers\UserController::class);
-// Master Module start
-Route::resource('clients', App\Http\Controllers\ClientsController::class);
+    // Operation Module start
+    Route::resource('jobcards', App\Http\Controllers\JobcardController::class);
+    Route::resource('inspections', App\Http\Controllers\InspectionController::class);
+    Route::resource('oil-fillings', App\Http\Controllers\OilFillingController::class);
+    Route::get('calibrations/jobcard-details/{id}', [App\Http\Controllers\CalibrationController::class, 'getJobcardDetails'])->name('calibrations.jobcard-details');
+    Route::resource('calibrations', App\Http\Controllers\CalibrationController::class);
 
-Route::resource('mocs', App\Http\Controllers\MOCController::class);
-
-Route::resource('flanges', App\Http\Controllers\FlangeController::class);
-
-Route::resource('capillaries', App\Http\Controllers\CapillaryController::class);
-// Master Module end
-
-// start
-Route::resource('jobcards', App\Http\Controllers\JobcardController::class);
-Route::resource('inspections', App\Http\Controllers\InspectionController::class);
-Route::resource('oil-fillings', App\Http\Controllers\OilFillingController::class);
-Route::resource('calibrations', App\Http\Controllers\CalibrationController::class);
-
-Route::get('/certificate/{id}/', [App\Http\Controllers\CertificateController::class, 'generateJobCertificate'])->name('jobcards.certificate');
+    Route::get('/certificate/{id}/', [App\Http\Controllers\CertificateController::class, 'generateJobCertificate'])->name('jobcards.certificate');
 });
