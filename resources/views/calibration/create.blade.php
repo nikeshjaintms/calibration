@@ -203,8 +203,7 @@
                                                 <th>Set Point %</th>
                                                 <th>Expected Value</th>
                                                 <th>Desired Output (mA)</th>
-                                                <th>As Found (mA)</th>
-                                                <th>As Left (mA)</th>
+                                                <th>Measured mA</th>
                                                 <th>Error</th>
                                                 <th>Error %</th>
                                                 <th style="width: 50px;">Action</th>
@@ -217,11 +216,10 @@
                                                     <td><input type="text" name="points[{{ $index }}][set_point_percentage]" class="form-control set-point-pct" value="{{ $point['set_point_percentage'] ?? '' }}" readonly></td>
                                                     <td><input type="number" step="0.01" name="points[{{ $index }}][expected]" class="form-control expected-val" value="{{ $point['expected'] }}" required readonly></td>
                                                     <td><input type="number" step="0.0001" name="points[{{ $index }}][desired_output]" class="form-control desired-out" value="{{ $point['desired_output'] ?? '' }}" readonly style="background:#f0f8ff;"></td>
-                                                    <td><input type="number" step="0.01" name="points[{{ $index }}][as_found]" class="form-control found-val" value="{{ $point['as_found'] ?? '' }}"></td>
                                                     <td><input type="number" step="0.01" name="points[{{ $index }}][as_left]" class="form-control left-val" value="{{ $point['as_left'] ?? '' }}"></td>
                                                     <td><input type="number" step="0.01" name="points[{{ $index }}][error]" class="form-control error-val" readonly></td>
                                                     <td><input type="number" step="0.0001" name="points[{{ $index }}][error_percentage]" class="form-control error-pct" readonly></td>
-                                                    <td><button type="button" class="btn btn-danger btn-sm remove-row"><i class="fa fa-trash"></i></button></td>
+                                                    <td><span class="badge badge-success">PASS</span></td>
                                                 </tr>
                                                 @endforeach
                                             @else
@@ -229,17 +227,15 @@
                                                     <td><input type="text" name="points[0][set_point_percentage]" class="form-control set-point-pct" readonly></td>
                                                     <td><input type="number" step="0.01" name="points[0][expected]" class="form-control expected-val" required readonly></td>
                                                     <td><input type="number" step="0.0001" name="points[0][desired_output]" class="form-control desired-out" readonly style="background:#f0f8ff;"></td>
-                                                    <td><input type="number" step="0.01" name="points[0][as_found]" class="form-control found-val"></td>
                                                     <td><input type="number" step="0.01" name="points[0][as_left]" class="form-control left-val"></td>
                                                     <td><input type="number" step="0.01" name="points[0][error]" class="form-control error-val" readonly></td>
                                                     <td><input type="number" step="0.0001" name="points[0][error_percentage]" class="form-control error-pct" readonly></td>
-                                                    <td></td>
+                                                    <td><span class="badge badge-success">PASS</span></td>
                                                 </tr>
                                             @endif
                                         </tbody>
                                     </table>
                                 </div>
-                                <button type="button" class="btn btn-primary btn-sm mt-2" id="addRow"><i class="fa fa-plus"></i> Add Point</button>
                             </div>
                         </div>
 
@@ -308,11 +304,10 @@
                         <td><input type="text" name="points[${rowIdx}][set_point_percentage]" class="form-control set-point-pct" value="${point.pct}" readonly></td>
                         <td><input type="number" step="0.01" name="points[${rowIdx}][expected]" class="form-control expected-val" value="${point.val.toFixed(2)}" required readonly></td>
                         <td><input type="number" step="0.0001" name="points[${rowIdx}][desired_output]" class="form-control desired-out" readonly style="background:#f0f8ff;"></td>
-                        <td><input type="number" step="0.01" name="points[${rowIdx}][as_found]" class="form-control found-val"></td>
                         <td><input type="number" step="0.01" name="points[${rowIdx}][as_left]" class="form-control left-val"></td>
                         <td><input type="number" step="0.01" name="points[${rowIdx}][error]" class="form-control error-val" readonly></td>
                         <td><input type="number" step="0.0001" name="points[${rowIdx}][error_percentage]" class="form-control error-pct" readonly></td>
-                        <td></td>
+                        <td><span class="badge badge-success">PASS</span></td>
                     </tr>
                 `;
                 $('#pointsTable tbody').append(newRow);

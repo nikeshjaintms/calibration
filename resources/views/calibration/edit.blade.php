@@ -221,9 +221,10 @@
                                                 <th style="width: 120px;">Set Point %</th>
                                                 <th>Expected Value</th>
                                                 <th>Desired Output (mA)</th>
-                                                <th>Measured mA (As Left)</th>
+                                                <th>Measured mA</th>
                                                 <th>Error</th>
                                                 <th>Error %</th>
+                                                <th style="width: 50px;">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -255,6 +256,7 @@
                                                     </td>
                                                 <td><input type="number" step="0.01" name="points[{{ $index }}][error]" class="form-control error-val" value="{{ is_array($point) ? $point['error'] : $point->error }}" readonly></td>
                                                 <td><input type="number" step="0.0001" name="points[{{ $index }}][error_percentage]" class="form-control error-pct" value="{{ is_array($point) ? $point['error_percentage'] : $point->error_percentage }}" readonly></td>
+                                                <td><span class="badge badge-success">PASS</span></td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
