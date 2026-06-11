@@ -75,7 +75,7 @@
 
                         @php
                             $points = $calibration->points;
-                            $has_data = $points->contains(fn($p) => !is_null($p->as_found));
+                            $has_data = $points->contains(fn($p) => !is_null($p->as_left) || !is_null($p->as_found));
                         @endphp
 
                         @if ($has_data)
@@ -100,10 +100,10 @@
                                         @foreach($points as $index => $point)
                                             @php
                                                 $pct = (float) str_replace('%', '', $point->set_point_percentage);
-                                                $desired = $point->as_found ?? (4.0 + ($pct / 100.0) * 16.0);
+                                                $desired = $point->desired_output ?? (4.0 + ($pct / 100.0) * 16.0);
                                                 $measured = $point->as_left;
-                                                $error = $measured !== null ? ($measured - $desired) : null;
-                                                $error_fs = $error !== null ? (($error / 16.0) * 100.0) : null;
+                                                $error = $point->error !== null ? $point->error : ($measured !== null ? ($measured - $desired) : null);
+                                                $error_fs = $point->error_percentage !== null ? $point->error_percentage : ($error !== null ? (($error / 16.0) * 100.0) : null);
                                                 $rounded_error_fs = $error_fs !== null ? round($error_fs, 4, PHP_ROUND_HALF_EVEN) : null;
                                                 $status = 'PASS';
                                             @endphp

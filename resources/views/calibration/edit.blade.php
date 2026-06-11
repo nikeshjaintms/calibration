@@ -243,25 +243,18 @@
                                                             value="{{ is_array($point) ? $point['expected'] : $point->expected }}"
                                                             required readonly></td>
                                                     <td><input type="number" step="0.01"
-                                                            name="points[{{ $index }}][as_found]"
-                                                            class="form-control found-val"
-                                                            value="{{ is_array($point) ? $point['as_found'] : $point->as_found }}">
+                                                            name="points[{{ $index }}][desired_output]"
+                                                            class="form-control desired-out"
+                                                            value="{{ is_array($point) ? number_format(4 + (float)str_replace('%','',$point['set_point_percentage'])/100*16,4) : number_format(4 + (float)str_replace('%','',$point->set_point_percentage)/100*16,4) }}"
+                                                            readonly style="background:#f0f8ff;">
                                                     </td>
                                                     <td><input type="number" step="0.01"
                                                             name="points[{{ $index }}][as_left]"
                                                             class="form-control left-val"
                                                             value="{{ is_array($point) ? $point['as_left'] : $point->as_left }}">
                                                     </td>
-                                                    <td><input type="number" step="0.01"
-                                                            name="points[{{ $index }}][error]"
-                                                            class="form-control error-val"
-                                                            value="{{ is_array($point) ? $point['error'] : $point->error }}"
-                                                            readonly></td>
-                                                    <td><input type="number" step="0.0001"
-                                                            name="points[{{ $index }}][error_percentage]"
-                                                            class="form-control error-pct"
-                                                            value="{{ is_array($point) ? $point['error_percentage'] : $point->error_percentage }}"
-                                                            readonly></td>
+                                                <td><input type="number" step="0.01" name="points[{{ $index }}][error]" class="form-control error-val" value="{{ is_array($point) ? $point['error'] : $point->error }}" readonly></td>
+                                                <td><input type="number" step="0.0001" name="points[{{ $index }}][error_percentage]" class="form-control error-pct" value="{{ is_array($point) ? $point['error_percentage'] : $point->error_percentage }}" readonly></td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
@@ -309,9 +302,11 @@
             });
 
             function calculateRow(row) {
-                // Desired Output (mA) = as_found (user entered)
-                let desired = parseFloat(row.find('.found-val').val());
-                // Measured mA (As Left) = as_left (user entered)
+                let pctStr = row.find('.set-point-pct').val() || "0%";
+                let pct = parseFloat(pctStr.replace('%', '')) || 0;
+                let desired = 4 + (pct / 100) * 16;
+                row.find('.desired-out').val(desired.toFixed(4));
+
                 let left = parseFloat(row.find('.left-val').val());
 
                 if (isNaN(desired) || isNaN(left)) {
