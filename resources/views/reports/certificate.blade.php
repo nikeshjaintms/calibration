@@ -211,11 +211,11 @@
     <!-- Result Table Section -->
     @php
         $points = $jobcard->calibration->points;
-        $has_found = $points->contains(function($p) { return !is_null($p->as_found); });
+        $has_data = $points->contains(function($p) { return !is_null($p->as_found); });
         $has_left = $points->contains(function($p) { return !is_null($p->as_left); });
     @endphp
 
-    @if ($has_found)
+    @if ($has_data)
     <table class="cal-details-table">
         <thead>
             <tr>
@@ -237,8 +237,8 @@
             @foreach ($points as $index => $point)
                 @php
                     $pct = (float) str_replace('%', '', $point->set_point_percentage);
-                    $desired = 4.0 + ($pct / 100.0) * 16.0;
-                    $measured = $point->as_found;
+                    $desired = $point->as_found ?? (4.0 + ($pct / 100.0) * 16.0);
+                    $measured = $point->as_left;
                     $error = $measured !== null ? ($measured - $desired) : null;
                     $error_fs = $error !== null ? (($error / 16.0) * 100.0) : null;
                     $rounded_error_fs = $error_fs !== null ? round($error_fs, 4, PHP_ROUND_HALF_EVEN) : null;

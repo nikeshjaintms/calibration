@@ -199,9 +199,11 @@
                                 <table class="table table-bordered" id="pointsTable">
                                     <thead>
                                         <tr class="bg-light">
+                                            <th>Set Point %</th>
                                             <th>Expected Value</th>
-                                            <th>As Found</th>
-                                            <th>As Left</th>
+                                            <th>Desired Output (mA)</th>
+                                            <th>As Found (mA)</th>
+                                            <th>As Left (mA)</th>
                                             <th>Error</th>
                                             <th>Error %</th>
                                             <th style="width: 50px;">Action</th>
@@ -211,17 +213,21 @@
                                         @if(old('points'))
                                             @foreach(old('points') as $index => $point)
                                             <tr>
-                                                <td><input type="number" step="0.01" name="points[{{ $index }}][expected]" class="form-control expected-val" value="{{ $point['expected'] }}" required></td>
-                                                <td><input type="number" step="0.01" name="points[{{ $index }}][as_found]" class="form-control found-val" value="{{ $point['as_found'] }}"></td>
-                                                <td><input type="number" step="0.01" name="points[{{ $index }}][as_left]" class="form-control left-val" value="{{ $point['as_left'] }}"></td>
-                                                <td><input type="number" step="0.01" name="points[{{ $index }}][error]" class="form-control error-val" value="{{ $point['error'] }}" readonly></td>
-                                                <td><input type="number" step="0.0001" name="points[{{ $index }}][error_percentage]" class="form-control error-pct" value="{{ $point['error_percentage'] }}" readonly></td>
+                                                <td><input type="text" name="points[{{ $index }}][set_point_percentage]" class="form-control set-point-pct" value="{{ $point['set_point_percentage'] ?? '' }}" readonly></td>
+                                                <td><input type="number" step="0.01" name="points[{{ $index }}][expected]" class="form-control expected-val" value="{{ $point['expected'] }}" required readonly></td>
+                                                <td><input type="number" step="0.0001" name="points[{{ $index }}][desired_output]" class="form-control desired-out" value="{{ $point['desired_output'] ?? '' }}" readonly style="background:#f0f8ff;"></td>
+                                                <td><input type="number" step="0.01" name="points[{{ $index }}][as_found]" class="form-control found-val" value="{{ $point['as_found'] ?? '' }}"></td>
+                                                <td><input type="number" step="0.01" name="points[{{ $index }}][as_left]" class="form-control left-val" value="{{ $point['as_left'] ?? '' }}"></td>
+                                                <td><input type="number" step="0.01" name="points[{{ $index }}][error]" class="form-control error-val" value="{{ $point['error'] ?? '' }}" readonly></td>
+                                                <td><input type="number" step="0.0001" name="points[{{ $index }}][error_percentage]" class="form-control error-pct" value="{{ $point['error_percentage'] ?? '' }}" readonly></td>
                                                 <td><button type="button" class="btn btn-danger btn-sm remove-row"><i class="fa fa-trash"></i></button></td>
                                             </tr>
                                             @endforeach
                                         @else
                                             <tr>
-                                                <td><input type="number" step="0.01" name="points[0][expected]" class="form-control expected-val" required></td>
+                                                <td><input type="text" name="points[0][set_point_percentage]" class="form-control set-point-pct" readonly></td>
+                                                <td><input type="number" step="0.01" name="points[0][expected]" class="form-control expected-val" required readonly></td>
+                                                <td><input type="number" step="0.0001" name="points[0][desired_output]" class="form-control desired-out" readonly style="background:#f0f8ff;"></td>
                                                 <td><input type="number" step="0.01" name="points[0][as_found]" class="form-control found-val"></td>
                                                 <td><input type="number" step="0.01" name="points[0][as_left]" class="form-control left-val"></td>
                                                 <td><input type="number" step="0.01" name="points[0][error]" class="form-control error-val" readonly></td>
@@ -300,13 +306,17 @@
                     <tr>
                         <td><input type="text" name="points[${rowIdx}][set_point_percentage]" class="form-control set-point-pct" value="${point.pct}" readonly></td>
                         <td><input type="number" step="0.01" name="points[${rowIdx}][expected]" class="form-control expected-val" value="${point.val.toFixed(2)}" required readonly></td>
+                        <td><input type="number" step="0.0001" name="points[${rowIdx}][desired_output]" class="form-control desired-out" readonly style="background:#f0f8ff;"></td>
                         <td><input type="number" step="0.01" name="points[${rowIdx}][as_found]" class="form-control found-val"></td>
                         <td><input type="number" step="0.01" name="points[${rowIdx}][as_left]" class="form-control left-val"></td>
                         <td><input type="number" step="0.01" name="points[${rowIdx}][error]" class="form-control error-val" readonly></td>
                         <td><input type="number" step="0.0001" name="points[${rowIdx}][error_percentage]" class="form-control error-pct" readonly></td>
+                        <td></td>
                     </tr>
                 `;
                 $('#pointsTable tbody').append(newRow);
+                // Calculate desired output immediately after adding row
+                calculateRow($('#pointsTable tbody tr').last());
                 rowIdx++;
             });
 
@@ -340,31 +350,26 @@
 
 
 
-        // Calculations
         $(document).on('input', '.found-val, .left-val, .expected-val', function() {
             let row = $(this).closest('tr');
             calculateRow(row);
         });
 
         function calculateRow(row) {
-            let setPointStr = row.find('.set-point-pct').val() || "0";
-            let pct = parseFloat(setPointStr.replace('%', '')) || 0;
-            let desired = 4 + (pct / 100) * 16;
-            
-            let found = parseFloat(row.find('.found-val').val());
+            // Desired Output (mA) = as_found (user entered)
+            let desired = parseFloat(row.find('.found-val').val());
+            // Measured mA (As Left) = as_left (user entered)
+            let left = parseFloat(row.find('.left-val').val());
 
-            // Use As Left if present, else As Found
-            let valToUse = !isNaN(left) ? left : (!isNaN(found) ? found : null);
-
-            if (valToUse === null) {
+            if (isNaN(desired) || isNaN(left)) {
                 row.find('.error-val').val("");
                 row.find('.error-pct').val("");
                 return;
             }
 
-            // Error = As Left - Expected
-            let error = valToUse - expected;
-            row.find('.error-val').val(error.toFixed(2));
+            // Error = Measured mA (As Left) - Desired Output (mA)
+            let error = left - desired;
+            row.find('.error-val').val(error.toFixed(3));
 
             // Error % = (Error / 16) * 100
             let errorPct = (error / 16) * 100;

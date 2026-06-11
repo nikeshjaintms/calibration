@@ -9,6 +9,7 @@ class CalibrationPoint extends Model
     protected $fillable = [
         'calibration_id',
         'set_point_percentage',
+        'desired_output',
         'expected',
         'as_found',
         'as_left',

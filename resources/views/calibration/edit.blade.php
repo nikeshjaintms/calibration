@@ -220,7 +220,7 @@
                                             <tr class="bg-light">
                                                 <th style="width: 120px;">Set Point %</th>
                                                 <th>Expected Value</th>
-                                                <th>Measured mA (As Found)</th>
+                                                <th>Desired Output (mA)</th>
                                                 <th>Measured mA (As Left)</th>
                                                 <th>Error</th>
                                                 <th>Error %</th>
@@ -309,29 +309,19 @@
             });
 
             function calculateRow(row) {
-                let setPointStr = row.find('.set-point-pct').val() || "0";
-                let pct = parseFloat(setPointStr.replace('%', '')) || 0;
-                let desired = 4 + (pct / 100) * 16;
-                
-                let found = parseFloat(row.find('.found-val').val());
+                // Desired Output (mA) = as_found (user entered)
+                let desired = parseFloat(row.find('.found-val').val());
+                // Measured mA (As Left) = as_left (user entered)
                 let left = parseFloat(row.find('.left-val').val());
 
-                // If left is entered, use left, else use found.
-                let measured = NaN;
-                if (!isNaN(left)) {
-                    measured = left;
-                } else if (!isNaN(found)) {
-                    measured = found;
-                }
-
-                if (isNaN(measured)) {
+                if (isNaN(desired) || isNaN(left)) {
                     row.find('.error-val').val("");
                     row.find('.error-pct').val("");
                     return;
                 }
 
-                // Error = Measured mA - Desired Output mA
-                let error = measured - desired;
+                // Error = Measured mA (As Left) - Desired Output (mA)
+                let error = left - desired;
                 row.find('.error-val').val(error.toFixed(3));
 
                 // Error % = (Error / 16) * 100
