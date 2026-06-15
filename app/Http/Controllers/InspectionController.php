@@ -14,7 +14,10 @@ class InspectionController extends Controller
      */
     public function index()
     {
-        $inspections = Inspection::with('jobcard')->latest()->get();
+        $inspections = Inspection::with('jobcard')
+            ->whereHas('jobcard')
+            ->latest()
+            ->get();
         return view('inspection.index', compact('inspections'));
     }
 

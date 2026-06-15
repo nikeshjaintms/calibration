@@ -16,7 +16,7 @@ class CalibrationController extends Controller
      */
     public function index()
     {
-        $calibrations = Calibration::with(['jobcard', 'points'])->latest()->get();
+        $calibrations = Calibration::with(['jobcard', 'points'])->whereHas('jobcard')->latest()->get();
         return view('calibration.index', compact('calibrations'));
     }
 
