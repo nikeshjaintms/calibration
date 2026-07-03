@@ -172,6 +172,12 @@
             <td class="label-cell">Warranty due on</td>
             <td class="value-cell">{{ $jobcard->calibration->warranty_due_date ? \Carbon\Carbon::parse($jobcard->calibration->warranty_due_date)->format('d.m.Y') : '-' }}</td>
         </tr>
+        <tr>
+            <td class="label-cell">Flange Name</td>
+            <td class="value-cell">{{ $jobcard->calibration->flange->name ?? '-' }}</td>
+            <td class="label-cell">Flange Size</td>
+            <td class="value-cell" colspan="3">{{ $jobcard->calibration->flange_size ?? '-' }}</td>
+        </tr>
     </table>
 
     <!-- Calibration Standard details connected directly with no margin -->

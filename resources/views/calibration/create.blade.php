@@ -98,6 +98,31 @@
                             </div>
                         </div>
 
+                        <div class="col-md-4 mt-3">
+                            <div class="form-group">
+                                <label>Flange Name</label>
+                                <select name="flange_id" id="flange_id" class="form-select select2">
+                                    <option value="">Select Flange</option>
+                                    @foreach($flanges as $flange)
+                                    <option value="{{ $flange->id }}" {{ old('flange_id') == $flange->id ? 'selected' : '' }}>{{ $flange->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('flange_id')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mt-3">
+                            <div class="form-group">
+                                <label>Flange Size</label>
+                                <input type="text" name="flange_size" id="flange_size" class="form-control" placeholder="Flange Size" value="{{ old('flange_size') }}" readonly style="background:#eee;">
+                                @error('flange_size')
+                                <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        </div>
+
                         <div class="col-md-3 mt-3">
                             <div class="form-group">
                                 <label>Temp (°C)</label>
@@ -267,6 +292,26 @@
 <script>
     $(document).ready(function() {
        let rowIdx = Number("{{ count(old('points', [])) }}");
+
+        // Fetch Flange size on Flange change
+        $('#flange_id').change(function() {
+            let flangeId = $(this).val();
+            if (flangeId) {
+                $.ajax({
+                    url: `/flanges/${flangeId}/size`,
+                    type: 'GET',
+                    success: function(response) {
+                        $('#flange_size').val(response.size);
+                    },
+                    error: function(err) {
+                        console.error("Error fetching flange size:", err);
+                        $('#flange_size').val('');
+                    }
+                });
+            } else {
+                $('#flange_size').val('');
+            }
+        });
 
         // Auto-generate rows and fetch details on Jobcard change
         $('#jobcard_id').change(function() {

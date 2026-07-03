@@ -98,4 +98,10 @@ class FlangeController extends Controller
             return redirect()->route('flanges.index')->with('error', 'Failed to delete Flange.');
         }
     }
+
+    public function getSize($id)
+    {
+        $flange = Flange::findOrFail($id);
+        return response()->json(['size' => $flange->size]);
+    }
 }

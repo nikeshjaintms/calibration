@@ -7,6 +7,7 @@ use App\Models\Calibration;
 use App\Models\CalibrationPoint;
 use App\Models\jobcard;
 use App\Models\User;
+use App\Models\Flange;
 use Illuminate\Support\Facades\DB;
 
 class CalibrationController extends Controller
@@ -28,7 +29,8 @@ class CalibrationController extends Controller
         $jobcard_id = $request->query('jobcard_id');
         $jobcards = jobcard::where('status', 'active')->get();
         $users = User::where('status', 'active')->get();
-        return view('calibration.create', compact('jobcards', 'jobcard_id', 'users'));
+        $flanges = Flange::where('status', 'active')->get();
+        return view('calibration.create', compact('jobcards', 'jobcard_id', 'users', 'flanges'));
     }
 
     /**
@@ -80,6 +82,8 @@ class CalibrationController extends Controller
         $request->validate([
             'jobcard_id' => 'required|exists:jobcards,id',
             'user_id' => 'nullable|exists:users,id',
+            'flange_id' => 'nullable|exists:flanges,id',
+            'flange_size' => 'nullable|string',
             'date' => 'required|date',
             'instrument' => 'required|string',
             'temperature' => 'nullable|string',
@@ -185,7 +189,8 @@ class CalibrationController extends Controller
         $calibration = Calibration::with('points')->findOrFail($id);
         $jobcards = jobcard::all();
         $users = User::all();
-        return view('calibration.edit', compact('calibration', 'jobcards', 'users'));
+        $flanges = Flange::where('status', 'active')->get();
+        return view('calibration.edit', compact('calibration', 'jobcards', 'users', 'flanges'));
     }
 
     /**
@@ -198,6 +203,8 @@ class CalibrationController extends Controller
         $request->validate([
             'jobcard_id' => 'required|exists:jobcards,id',
             'user_id' => 'nullable|exists:users,id',
+            'flange_id' => 'nullable|exists:flanges,id',
+            'flange_size' => 'nullable|string',
             'date' => 'required|date',
             'instrument' => 'required|string',
             'certificate_number' => 'required|string',

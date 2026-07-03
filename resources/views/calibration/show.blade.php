@@ -48,6 +48,8 @@
                                 <div><strong>Calibration By:</strong> {{ $calibration->calibration_by ?? 'N/A' }}</div>
                                 <div><strong>Instrument:</strong> {{ $calibration->instrument }}</div>
                                 <div><strong>Certificate No:</strong> {{ $calibration->certificate_number }}</div>
+                                <div><strong>Flange Name:</strong> {{ $calibration->flange->name ?? 'N/A' }}</div>
+                                <div><strong>Flange Size:</strong> {{ $calibration->flange_size ?? 'N/A' }}</div>
                             </div>
                             <div class="col-sm-6 text-sm-end">
                                 <h6 class="mb-3">Related Jobcard:</h6>

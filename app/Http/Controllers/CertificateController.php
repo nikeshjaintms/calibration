@@ -17,6 +17,7 @@ class CertificateController extends Controller
             'oil_filling.capillary',
             'oil_filling',
             'calibration.points',
+            'calibration.flange',
             'inspections'
         ])->findOrFail($id);
 

@@ -25,12 +25,19 @@ class Calibration extends Model
         'calibration_method',
         'communicator_make',
         'activity',
-        'work_details'
+        'work_details',
+        'flange_id',
+        'flange_size'
     ];
 
     public function jobcard()
     {
         return $this->belongsTo(jobcard::class);
+    }
+
+    public function flange()
+    {
+        return $this->belongsTo(Flange::class);
     }
 
     public function points()

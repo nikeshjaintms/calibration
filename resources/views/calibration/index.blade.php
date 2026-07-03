@@ -51,7 +51,12 @@
                                         <td>{{ \Carbon\Carbon::parse($calibration->date)->format('d/m/Y') }}</td>
                                         <td>{{ $calibration->jobcard->jobcard_number }}</td>
                                         <td>{{ $calibration->jobcard->customer_name }}</td>
-                                        <td>{{ $calibration->instrument }}</td>
+                                        <td>
+                                            {{ $calibration->instrument }}
+                                            @if($calibration->flange)
+                                                <br><small class="text-muted">Flange: {{ $calibration->flange->name }} ({{ $calibration->flange_size }})</small>
+                                            @endif
+                                        </td>
                                         <td>{{ $calibration->certificate_number }}</td>
                                         <td>
                                             @if($calibration->result == 'pass')
