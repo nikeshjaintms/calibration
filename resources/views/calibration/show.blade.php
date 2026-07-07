@@ -75,6 +75,17 @@
                             </div>
                         </div>
 
+                        @if($calibration->work_details)
+                        <div class="row mb-4">
+                            <div class="col-sm-12">
+                                <strong>Work Details:</strong><br>
+                                <div class="mt-2" style="padding: 10px; background-color: #f5f5f5; border-radius: 4px;">
+                                    {{ $calibration->work_details }}
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+
                         @php
                             $points = $calibration->points;
                             $has_data = $points->contains(fn($p) => !is_null($p->as_left) || !is_null($p->as_found));

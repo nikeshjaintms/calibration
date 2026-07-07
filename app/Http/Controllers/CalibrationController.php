@@ -280,20 +280,55 @@ class CalibrationController extends Controller
             'inspections'
         ])->findOrFail($id);
 
-        $flange = $jobcard->oil_filling->flange->name ?? '';
-        $flangeMoc = $jobcard->oil_filling->moc->name ?? '';
-        $diaphragmMoc = $jobcard->oil_filling->moc->name ?? '';
-        $capillary = $jobcard->oil_filling->capillary->name ?? '';
-
-        $flangeStr = $flange ? "FLANGE : $flange" : "";
-        $flangeMocStr = $flangeMoc ? "Flange MOC : $flangeMoc" : "";
-        $diaphragmMocStr = $diaphragmMoc ? "Diaphragm MOC : $diaphragmMoc" : "";
-        $capillaryStr = $capillary ? "with $capillary capillary ( BOTH SIDE )" : "";
-
-        $parts = array_filter([$flangeStr, $flangeMocStr, $diaphragmMocStr]);
-        $workDetails = implode(', ', $parts);
-        if ($capillaryStr) {
-            $workDetails .= " " . $capillaryStr;
+        $workDetails = '';
+        
+        if ($jobcard->oil_filling) {
+            $parts = [];
+            
+            // FLANGE : flange_name (flange_size)
+            if ($jobcard->oil_filling->flange) {
+                $flangeName = $jobcard->oil_filling->flange->name;
+                $flangeSize = $jobcard->oil_filling->flange->size;
+                
+                if ($flangeSize) {
+                    $parts[] = "FLANGE : {$flangeName} ({$flangeSize})";
+                } else {
+                    $parts[] = "FLANGE : {$flangeName}";
+                }
+            }
+            
+            // MOC : moc_name (without "Flange MOC" prefix)
+            if ($jobcard->oil_filling->moc) {
+                $mocName = $jobcard->oil_filling->moc->name;
+                $parts[] = "MOC : {$mocName}";
+            }
+            
+            // Diaphragm MOC : moc_name with detail (if any)
+            if ($jobcard->oil_filling->moc) {
+                $diaphragmMoc = $jobcard->oil_filling->moc->name;
+                // Check if MOC model has a 'detail' field - if not, just use the name
+                $diaphragmDetail = $jobcard->oil_filling->moc->detail ?? null;
+                
+                if ($diaphragmDetail) {
+                    $parts[] = "Diaphragm MOC : {$diaphragmMoc} with {$diaphragmDetail}";
+                } else {
+                    $parts[] = "Diaphragm MOC : {$diaphragmMoc}";
+                }
+            }
+            
+            // Capillary : capillary_name (capillary_size)
+            if ($jobcard->oil_filling->capillary) {
+                $capillaryName = $jobcard->oil_filling->capillary->name;
+                $capillarySize = $jobcard->oil_filling->capillary->size;
+                
+                if ($capillarySize) {
+                    $parts[] = "Capillary : {$capillaryName} ({$capillarySize})";
+                } else {
+                    $parts[] = "Capillary : {$capillaryName}";
+                }
+            }
+            
+            $workDetails = implode(', ', $parts);
         }
 
         return response()->json([
