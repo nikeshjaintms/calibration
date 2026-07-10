@@ -15,8 +15,11 @@ class OilFilling extends Model
         'quantity',
         'filling_date',
         'moc_id',
+        'moc_size',
         'flange_id',
+        'flange_size',
         'capillary_id',
+        'capillary_size',
         'filled_by',
         'user_id'
     ];

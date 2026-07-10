@@ -143,10 +143,19 @@
                                         <div class="row mt-3">
                                             <div class="col-md-6">
                                                 <table class="table table-bordered">
-                                                    <tr><th class="bg-light" style="width: 40%;">MOC</th><td>{{ $jobcard->oil_filling->moc->name ?? 'N/A' }}</td></tr>
-                                                    <tr><th class="bg-light">Flange</th><td>{{ $jobcard->oil_filling->flange->name ?? 'N/A' }} </td></tr>
-                                                    <tr><th class="bg-light">Size</th><td>{{ $jobcard->oil_filling->flange->size ?? 'N/A' }}</td></tr>
-                                                    <tr><th class="bg-light">Capillary</th><td>{{ $jobcard->oil_filling->capillary->name ?? 'N/A' }}</td></tr>
+                                                    @php
+                                                        $mocName = $jobcard->oil_filling->moc->name ?? 'N/A';
+                                                        $mocSize = $jobcard->oil_filling->moc_size ?: ($jobcard->oil_filling->moc->size ?? '');
+
+                                                        $flangeName = $jobcard->oil_filling->flange->name ?? 'N/A';
+                                                        $flangeSize = $jobcard->oil_filling->flange_size ?: ($jobcard->oil_filling->flange->size ?? '');
+
+                                                        $capillaryName = $jobcard->oil_filling->capillary->name ?? 'N/A';
+                                                        $capillarySize = $jobcard->oil_filling->capillary_size ?: ($jobcard->oil_filling->capillary->size ?? '');
+                                                    @endphp
+                                                    <tr><th class="bg-light" style="width: 40%;">MOC</th><td>{{ $mocName }}{{ !empty($mocSize) ? ' (' . $mocSize . ')' : '' }}</td></tr>
+                                                    <tr><th class="bg-light">Flange</th><td>{{ $flangeName }}{{ !empty($flangeSize) ? ' (' . $flangeSize . ')' : '' }}</td></tr>
+                                                    <tr><th class="bg-light">Capillary</th><td>{{ $capillaryName }}{{ !empty($capillarySize) ? ' (' . $capillarySize . ')' : '' }}</td></tr>
                                                 </table>
                                             </div>
                                             <div class="col-md-12">
@@ -173,18 +182,11 @@
                             <div class="tab-pane fade" id="oil-fill" role="tabpanel">
                                 @if($jobcard->oil_filling)
                                 <div class="row mt-3">
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <table class="table table-bordered">
-                                            <tr><th class="bg-light" style="width: 40%;">Oil Type</th><td>{{ $jobcard->oil_filling->oil_type }}</td></tr>
+                                            <tr><th class="bg-light" style="width: 30%;">Oil Type</th><td>{{ $jobcard->oil_filling->oil_type }}</td></tr>
                                             <tr><th class="bg-light">Quantity</th><td>{{ $jobcard->oil_filling->quantity }}</td></tr>
                                             <tr><th class="bg-light">Filling Date</th><td>{{ $jobcard->oil_filling->filling_date }}</td></tr>
-                                        </table>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <table class="table table-bordered">
-                                            <tr><th class="bg-light" style="width: 40%;">MOC</th><td>{{ $jobcard->oil_filling->moc->name ?? 'N/A' }}</td></tr>
-                                            <tr><th class="bg-light">Flange</th><td>{{ $jobcard->oil_filling->flange->name ?? 'N/A' }}</td></tr>
-                                            <tr><th class="bg-light">Capillary</th><td>{{ $jobcard->oil_filling->capillary->name ?? 'N/A' }}</td></tr>
                                         </table>
                                     </div>
                                     <div class="col-md-12">

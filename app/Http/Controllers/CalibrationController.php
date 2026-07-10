@@ -198,7 +198,15 @@ class CalibrationController extends Controller
      */
     public function show(string $id)
     {
-        $calibration = Calibration::with(['jobcard', 'points'])->findOrFail($id);
+        $calibration = Calibration::with([
+            'jobcard.oil_filling.moc',
+            'jobcard.oil_filling.flange',
+            'jobcard.oil_filling.capillary',
+            'jobcard.oilFilling.moc',
+            'jobcard.oilFilling.flange',
+            'jobcard.oilFilling.capillary',
+            'points'
+        ])->findOrFail($id);
         return view('calibration.show', compact('calibration'));
     }
 
@@ -207,7 +215,15 @@ class CalibrationController extends Controller
      */
     public function edit(string $id)
     {
-        $calibration = Calibration::with('points')->findOrFail($id);
+        $calibration = Calibration::with([
+            'jobcard.oil_filling.moc',
+            'jobcard.oil_filling.flange',
+            'jobcard.oil_filling.capillary',
+            'jobcard.oilFilling.moc',
+            'jobcard.oilFilling.flange',
+            'jobcard.oilFilling.capillary',
+            'points'
+        ])->findOrFail($id);
         $jobcards = jobcard::where(function($q) use ($calibration) {
                 $q->where('status', 'active')
                   ->orWhere('id', $calibration->jobcard_id);
@@ -332,22 +348,28 @@ class CalibrationController extends Controller
         if ($jobcard->oil_filling) {
             $parts = [];
             
-            // FLANGE : flange_name (flange_size)
+            // FLANGE : flange_name (saved_flange_size)
             if ($jobcard->oil_filling->flange) {
                 $flangeName = $jobcard->oil_filling->flange->name;
-                $flangeSize = $jobcard->oil_filling->flange->size;
+                $flangeSize = $jobcard->oil_filling->flange_size ?: ($jobcard->oil_filling->flange->size ?? '');
                 
-                if ($flangeSize) {
+                if (!empty($flangeSize)) {
                     $parts[] = "FLANGE : {$flangeName} ({$flangeSize})";
                 } else {
                     $parts[] = "FLANGE : {$flangeName}";
                 }
             }
             
-            // MOC : moc_name (without "Flange MOC" prefix)
+            // MOC : moc_name (saved_moc_size)
             if ($jobcard->oil_filling->moc) {
                 $mocName = $jobcard->oil_filling->moc->name;
-                $parts[] = "MOC : {$mocName}";
+                $mocSize = $jobcard->oil_filling->moc_size ?: ($jobcard->oil_filling->moc->size ?? '');
+                
+                if (!empty($mocSize)) {
+                    $parts[] = "MOC : {$mocName} ({$mocSize})";
+                } else {
+                    $parts[] = "MOC : {$mocName}";
+                }
             }
             
             // Diaphragm MOC : moc_name with detail (if any)
@@ -363,12 +385,12 @@ class CalibrationController extends Controller
                 }
             }
             
-            // Capillary : capillary_name (capillary_size)
+            // Capillary : capillary_name (saved_capillary_size)
             if ($jobcard->oil_filling->capillary) {
                 $capillaryName = $jobcard->oil_filling->capillary->name;
-                $capillarySize = $jobcard->oil_filling->capillary->size;
+                $capillarySize = $jobcard->oil_filling->capillary_size ?: ($jobcard->oil_filling->capillary->size ?? '');
                 
-                if ($capillarySize) {
+                if (!empty($capillarySize)) {
                     $parts[] = "Capillary : {$capillaryName} ({$capillarySize})";
                 } else {
                     $parts[] = "Capillary : {$capillaryName}";

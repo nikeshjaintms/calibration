@@ -213,20 +213,26 @@
                     $workDetailsParts = [];
                     $oilFilling = $jobcard->oil_filling ?? $jobcard->oilFilling;
                     if ($oilFilling) {
-                        // FLANGE : flange_name (flange_size)
+                        // FLANGE : flange_name (saved_flange_size)
                         if ($oilFilling->flange) {
                             $flangeName = $oilFilling->flange->name;
-                            $flangeSize = $oilFilling->flange->size;
-                            if ($flangeSize) {
+                            $flangeSize = $oilFilling->flange_size ?: ($oilFilling->flange->size ?? '');
+                            if (!empty($flangeSize)) {
                                 $workDetailsParts[] = "FLANGE : {$flangeName} ({$flangeSize})";
                             } else {
                                 $workDetailsParts[] = "FLANGE : {$flangeName}";
                             }
                         }
                         
-                        // MOC : moc_name
+                        // MOC : moc_name (saved_moc_size)
                         if ($oilFilling->moc) {
-                            $workDetailsParts[] = "MOC : " . $oilFilling->moc->name;
+                            $mocName = $oilFilling->moc->name;
+                            $mocSize = $oilFilling->moc_size ?: ($oilFilling->moc->size ?? '');
+                            if (!empty($mocSize)) {
+                                $workDetailsParts[] = "MOC : {$mocName} ({$mocSize})";
+                            } else {
+                                $workDetailsParts[] = "MOC : {$mocName}";
+                            }
                         }
                         
                         // Diaphragm MOC : diaphragm_moc_name
@@ -235,11 +241,11 @@
                             $workDetailsParts[] = "Diaphragm MOC : " . $diaphragmMocModel->name;
                         }
                         
-                        // Capillary : capillary_name (capillary_size)
+                        // Capillary : capillary_name (saved_capillary_size)
                         if ($oilFilling->capillary) {
                             $capillaryName = $oilFilling->capillary->name;
-                            $capillarySize = $oilFilling->capillary->size;
-                            if ($capillarySize) {
+                            $capillarySize = $oilFilling->capillary_size ?: ($oilFilling->capillary->size ?? '');
+                            if (!empty($capillarySize)) {
                                 $workDetailsParts[] = "Capillary : {$capillaryName} ({$capillarySize})";
                             } else {
                                 $workDetailsParts[] = "Capillary : {$capillaryName}";

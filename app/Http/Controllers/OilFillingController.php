@@ -61,8 +61,11 @@ class OilFillingController extends Controller
             'quantity' => 'required|string',
             'filling_date' => 'required|date',
             'moc_id' => 'required|exists:m_o_c_s,id',
+            'moc_size' => 'nullable|string',
             'flange_id' => 'required|exists:flanges,id',
+            'flange_size' => 'nullable|string',
             'capillary_id' => 'required|exists:capillaries,id',
+            'capillary_size' => 'nullable|string',
             'user_id' => 'nullable|exists:users,id',
         ]);
 
@@ -125,8 +128,11 @@ class OilFillingController extends Controller
             'quantity' => 'required|string',
             'filling_date' => 'required|date',
             'moc_id' => 'required|exists:m_o_c_s,id',
+            'moc_size' => 'nullable|string',
             'flange_id' => 'required|exists:flanges,id',
+            'flange_size' => 'nullable|string',
             'capillary_id' => 'required|exists:capillaries,id',
+            'capillary_size' => 'nullable|string',
             'user_id' => 'nullable|exists:users,id',
         ]);
 

@@ -75,12 +75,43 @@
                             </div>
                         </div>
 
-                        @if($calibration->work_details)
+                        @php
+                            $workDetailsParts = [];
+                            $oilFilling = $calibration->jobcard->oil_filling ?? $calibration->jobcard->oilFilling ?? null;
+                            if ($oilFilling) {
+                                // FLANGE
+                                if ($oilFilling->flange) {
+                                    $flangeName = $oilFilling->flange->name;
+                                    $flangeSize = $oilFilling->flange_size ?: ($oilFilling->flange->size ?? '');
+                                    $workDetailsParts[] = !empty($flangeSize) ? "FLANGE : {$flangeName} ({$flangeSize})" : "FLANGE : {$flangeName}";
+                                }
+                                // MOC
+                                if ($oilFilling->moc) {
+                                    $mocName = $oilFilling->moc->name;
+                                    $mocSize = $oilFilling->moc_size ?: ($oilFilling->moc->size ?? '');
+                                    $workDetailsParts[] = !empty($mocSize) ? "MOC : {$mocName} ({$mocSize})" : "MOC : {$mocName}";
+                                }
+                                // Diaphragm MOC
+                                if ($oilFilling->diaphragmMoc ?? $oilFilling->moc) {
+                                    $diaphragmMocModel = $oilFilling->diaphragmMoc ?? $oilFilling->moc;
+                                    $workDetailsParts[] = "Diaphragm MOC : " . $diaphragmMocModel->name;
+                                }
+                                // Capillary
+                                if ($oilFilling->capillary) {
+                                    $capillaryName = $oilFilling->capillary->name;
+                                    $capillarySize = $oilFilling->capillary_size ?: ($oilFilling->capillary->size ?? '');
+                                    $workDetailsParts[] = !empty($capillarySize) ? "Capillary : {$capillaryName} ({$capillarySize})" : "Capillary : {$capillaryName}";
+                                }
+                            }
+                            $displayWorkDetails = !empty($workDetailsParts) ? implode(', ', $workDetailsParts) : $calibration->work_details;
+                        @endphp
+
+                        @if($displayWorkDetails)
                         <div class="row mb-4">
                             <div class="col-sm-12">
                                 <strong>Work Details:</strong><br>
                                 <div class="mt-2" style="padding: 10px; background-color: #f5f5f5; border-radius: 4px;">
-                                    {{ $calibration->work_details }}
+                                    {{ $displayWorkDetails }}
                                 </div>
                             </div>
                         </div>

@@ -67,31 +67,45 @@
                                     <select name="moc_id" id="moc_id" class="form-select" required>
                                         <option value="">Select MOC</option>
                                         @foreach($mocs as $moc)
-                                            <option value="{{ $moc->id }}">{{ $moc->name }}</option>
+                                            <option value="{{ $moc->id }}" data-size="{{ $moc->size ?? '' }}">
+                                                {{ $moc->name }}{{ !empty($moc->size) ? ' (' . $moc->size . ')' : '' }}
+                                            </option>
                                         @endforeach
                                     </select>
+                                    <div class="mt-2">
+                                        <label for="moc_size" class="form-label" style="font-size: 13px; font-weight: 500;">MOC Size</label>
+                                        <input type="text" name="moc_size" id="moc_size" class="form-control form-control-sm" value="{{ old('moc_size') }}" placeholder="Enter MOC Size">
+                                    </div>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="flange_id" class="form-label">FLANGE <span class="text-danger">*</span></label>
                                     <select name="flange_id" id="flange_id" class="form-select" required>
                                         <option value="">Select Flange</option>
                                         @foreach($flanges as $flange)
-                                            <option value="{{ $flange->id }}">
+                                            <option value="{{ $flange->id }}" data-size="{{ $flange->size }}">
                                                 {{ $flange->name }}{{ !empty($flange->size) ? ' (' . $flange->size . ')' : '' }}
                                             </option>
                                         @endforeach
                                     </select>
+                                    <div class="mt-2">
+                                        <label for="flange_size" class="form-label" style="font-size: 13px; font-weight: 500;">Flange Size</label>
+                                        <input type="text" name="flange_size" id="flange_size" class="form-control form-control-sm" value="{{ old('flange_size') }}" placeholder="Enter Flange Size">
+                                    </div>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="capillary_id" class="form-label">CAPILLARY <span class="text-danger">*</span></label>
                                     <select name="capillary_id" id="capillary_id" class="form-select" required>
                                         <option value="">Select Capillary</option>
                                         @foreach($capillaries as $capillary)
-                                            <option value="{{ $capillary->id }}">
+                                            <option value="{{ $capillary->id }}" data-size="{{ $capillary->size }}">
                                                 {{ $capillary->name }}{{ !empty($capillary->size) ? ' (' . $capillary->size . ')' : '' }}
                                             </option>
                                         @endforeach
                                     </select>
+                                    <div class="mt-2">
+                                        <label for="capillary_size" class="form-label" style="font-size: 13px; font-weight: 500;">Capillary Size</label>
+                                        <input type="text" name="capillary_size" id="capillary_size" class="form-control form-control-sm" value="{{ old('capillary_size') }}" placeholder="Enter Capillary Size">
+                                    </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="user_id" class="form-label">Filled By (User)</label>
@@ -124,6 +138,23 @@
 
 <script>
     $(document).ready(function() {
+        function autoFillSize(selectId, inputId) {
+            const select = document.getElementById(selectId);
+            const input = document.getElementById(inputId);
+
+            if (!select || !input) return;
+
+            select.addEventListener('change', function () {
+                const selectedOption = this.options[this.selectedIndex];
+                const size = selectedOption.getAttribute('data-size') || '';
+                input.value = size;
+            });
+        }
+
+        autoFillSize('moc_id', 'moc_size');
+        autoFillSize('flange_id', 'flange_size');
+        autoFillSize('capillary_id', 'capillary_size');
+
         $("#oilFillingForm").validate({
             rules: {
                 jobcard_id: "required",
