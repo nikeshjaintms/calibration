@@ -27,7 +27,10 @@ class CalibrationController extends Controller
     public function create(Request $request)
     {
         $jobcard_id = $request->query('jobcard_id');
-        $jobcards = jobcard::where('status', 'active')->get();
+        $jobcards = jobcard::where('status', 'active')
+            ->whereHas('oil_filling')
+            ->whereDoesntHave('calibration')
+            ->get();
         $users = User::where('status', 'active')->get();
         $flanges = Flange::where('status', 'active')->get();
         return view('calibration.create', compact('jobcards', 'jobcard_id', 'users', 'flanges'));
@@ -54,10 +57,10 @@ class CalibrationController extends Controller
     //         'points.*.error' => 'nullable|numeric',
     //         'points.*.error_percentage' => 'nullable|numeric',
     //     ]);
-
+    // 
     //     DB::transaction(function () use ($request) {
     //         $data = $request->except(['points', 'user_id']);
-
+    // 
     //         if ($request->user_id) {
     //             $user = User::findOrFail($request->user_id);
     //             $data['user_id'] = $user->id;
@@ -66,19 +69,37 @@ class CalibrationController extends Controller
     //             $data['user_id'] = null;
     //             $data['calibration_by'] = null;
     //         }
-
+    // 
     //         $calibration = Calibration::create($data);
-
+    // 
     //         foreach ($request->points as $point) {
     //             $calibration->points()->create($point);
     //         }
     //     });
-
+    // 
     //     return redirect()->route('calibrations.index')->with('success', 'Calibration record created successfully.');
     // }
 
     public function store(Request $request)
     {
+        $jobcard = jobcard::find($request->jobcard_id);
+        if (!$jobcard) {
+            return back()->withInput()->withErrors(['jobcard_id' => 'Please create Jobcard before Inspection.']);
+        }
+
+        if (!$jobcard->inspections()->exists()) {
+            return back()->withInput()->withErrors(['jobcard_id' => 'Please complete Inspection before Oil Filling.']);
+        }
+
+        if (!$jobcard->oil_filling()->exists()) {
+            return back()->withInput()->withErrors(['jobcard_id' => 'Please complete Oil Filling before Calibration.']);
+        }
+
+        $existing = Calibration::where('jobcard_id', $request->jobcard_id)->exists();
+        if ($existing) {
+            return back()->withInput()->withErrors(['jobcard_id' => 'Calibration record already exists for this Jobcard.']);
+        }
+
         $request->validate([
             'jobcard_id' => 'required|exists:jobcards,id',
             'user_id' => 'nullable|exists:users,id',
@@ -187,7 +208,15 @@ class CalibrationController extends Controller
     public function edit(string $id)
     {
         $calibration = Calibration::with('points')->findOrFail($id);
-        $jobcards = jobcard::all();
+        $jobcards = jobcard::where(function($q) use ($calibration) {
+                $q->where('status', 'active')
+                  ->orWhere('id', $calibration->jobcard_id);
+            })
+            ->whereHas('oil_filling')
+            ->where(function($query) use ($calibration) {
+                $query->whereDoesntHave('calibration')
+                      ->orWhere('id', $calibration->jobcard_id);
+            })->get();
         $users = User::all();
         $flanges = Flange::where('status', 'active')->get();
         return view('calibration.edit', compact('calibration', 'jobcards', 'users', 'flanges'));
@@ -199,6 +228,24 @@ class CalibrationController extends Controller
     public function update(Request $request, string $id)
     {
         $calibration = Calibration::findOrFail($id);
+
+        $jobcard = jobcard::find($request->jobcard_id);
+        if (!$jobcard) {
+            return back()->withInput()->withErrors(['jobcard_id' => 'Please create Jobcard before Inspection.']);
+        }
+
+        if (!$jobcard->inspections()->exists()) {
+            return back()->withInput()->withErrors(['jobcard_id' => 'Please complete Inspection before Oil Filling.']);
+        }
+
+        if (!$jobcard->oil_filling()->exists()) {
+            return back()->withInput()->withErrors(['jobcard_id' => 'Please complete Oil Filling before Calibration.']);
+        }
+
+        $existing = Calibration::where('jobcard_id', $request->jobcard_id)->where('id', '!=', $id)->exists();
+        if ($existing) {
+            return back()->withInput()->withErrors(['jobcard_id' => 'Calibration record already exists for this Jobcard.']);
+        }
 
         $request->validate([
             'jobcard_id' => 'required|exists:jobcards,id',

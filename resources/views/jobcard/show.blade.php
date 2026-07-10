@@ -33,11 +33,19 @@
                             </div>
                             <div class="col-auto">
                                 @php
-                                    $allDone = ($jobcard->inspections->count() > 0 && $jobcard->oilFilling && $jobcard->calibration);
+                                    $hasInspection = $jobcard->inspections->count() > 0;
+                                    $hasOilFilling = (bool) $jobcard->oil_filling;
+                                    $hasCalibration = (bool) $jobcard->calibration;
                                 @endphp
-                                <span class="badge badge-{{ $allDone ? 'success' : 'warning' }} px-3 py-2">
-                                    {{ $allDone ? 'Completed' : 'In Progress' }}
-                                </span>
+                                @if(!$hasInspection)
+                                    <a href="{{ route('inspections.create', ['jobcard_id' => $jobcard->id]) }}" class="btn btn-sm btn-info py-2 px-3">Start Inspection</a>
+                                @elseif(!$hasOilFilling)
+                                    <a href="{{ route('oil-fillings.create', ['jobcard_id' => $jobcard->id]) }}" class="btn btn-sm btn-warning py-2 px-3">Start Oil Filling</a>
+                                @elseif(!$hasCalibration)
+                                    <a href="{{ route('calibrations.create', ['jobcard_id' => $jobcard->id]) }}" class="btn btn-sm btn-success py-2 px-3">Start Calibration</a>
+                                @else
+                                    <span class="badge badge-success px-3 py-2">Completed</span>
+                                @endif
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -94,7 +102,9 @@
                             <div class="tab-pane fade" id="inspection" role="tabpanel">
                                 <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
                                     <h5>Inspection History</h5>
+                                    @if(!$hasInspection)
                                     <a href="{{ route('inspections.create', ['jobcard_id' => $jobcard->id]) }}" class="btn btn-primary btn-sm">Add New Inspection</a>
+                                    @endif
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-striped">
@@ -149,7 +159,11 @@
                                         @else
                                         <div class="text-center py-5">
                                             <p class="text-muted">No specific data model for Diaphragm found. This section can be used for related technical data.</p>
+                                            @if($hasInspection)
                                             <a href="{{ route('oil-fillings.create', ['jobcard_id' => $jobcard->id]) }}" class="btn btn-primary btn-sm">Add Oil Filling</a>
+                                            @else
+                                            <p class="text-danger">Please complete Inspection first.</p>
+                                            @endif
                                         </div>
                                     @endif
                                 </div>
@@ -183,7 +197,11 @@
                                 @else
                                 <div class="text-center py-5">
                                     <p class="text-muted">No Oil Filling record found for this Jobcard.</p>
+                                    @if($hasInspection)
                                     <a href="{{ route('oil-fillings.create', ['jobcard_id' => $jobcard->id]) }}" class="btn btn-primary btn-sm">Add Oil Filling</a>
+                                    @else
+                                    <p class="text-danger">Please complete Inspection first.</p>
+                                    @endif
                                 </div>
                                 @endif
                             </div>
@@ -237,7 +255,11 @@
                                 @else
                                 <div class="text-center py-5">
                                     <p class="text-muted">No Calibration record found for this Jobcard.</p>
+                                    @if($hasOilFilling)
                                     <a href="{{ route('calibrations.create', ['jobcard_id' => $jobcard->id]) }}" class="btn btn-primary btn-sm">Add Calibration</a>
+                                    @else
+                                    <p class="text-danger">Please complete Oil Filling first.</p>
+                                    @endif
                                 </div>
                                 @endif
                             </div>

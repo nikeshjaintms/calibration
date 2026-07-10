@@ -208,8 +208,47 @@
         <tr>
             <td style="width: 80px; font-weight: bold; vertical-align: top; padding: 0;">Work details</td>
             <td style="width: 10px; font-weight: bold; vertical-align: top; padding: 0;">:</td>
-            <td style="vertical-align: top; padding: 0; text-align: justify;">
-                {{ $jobcard->calibration->work_details ?? 'N/A' }}
+            <td style="vertical-align: top; padding: 0; text-align: justify; word-wrap: break-word; overflow-wrap: break-word;">
+                @php
+                    $workDetailsParts = [];
+                    $oilFilling = $jobcard->oil_filling ?? $jobcard->oilFilling;
+                    if ($oilFilling) {
+                        // FLANGE : flange_name (flange_size)
+                        if ($oilFilling->flange) {
+                            $flangeName = $oilFilling->flange->name;
+                            $flangeSize = $oilFilling->flange->size;
+                            if ($flangeSize) {
+                                $workDetailsParts[] = "FLANGE : {$flangeName} ({$flangeSize})";
+                            } else {
+                                $workDetailsParts[] = "FLANGE : {$flangeName}";
+                            }
+                        }
+                        
+                        // MOC : moc_name
+                        if ($oilFilling->moc) {
+                            $workDetailsParts[] = "MOC : " . $oilFilling->moc->name;
+                        }
+                        
+                        // Diaphragm MOC : diaphragm_moc_name
+                        if ($oilFilling->diaphragmMoc ?? $oilFilling->moc) {
+                            $diaphragmMocModel = $oilFilling->diaphragmMoc ?? $oilFilling->moc;
+                            $workDetailsParts[] = "Diaphragm MOC : " . $diaphragmMocModel->name;
+                        }
+                        
+                        // Capillary : capillary_name (capillary_size)
+                        if ($oilFilling->capillary) {
+                            $capillaryName = $oilFilling->capillary->name;
+                            $capillarySize = $oilFilling->capillary->size;
+                            if ($capillarySize) {
+                                $workDetailsParts[] = "Capillary : {$capillaryName} ({$capillarySize})";
+                            } else {
+                                $workDetailsParts[] = "Capillary : {$capillaryName}";
+                            }
+                        }
+                    }
+                    $finalWorkDetails = !empty($workDetailsParts) ? implode(', ', $workDetailsParts) : ($jobcard->calibration->work_details ?? 'N/A');
+                @endphp
+                {{ $finalWorkDetails }}
             </td>
         </tr>
     </table>

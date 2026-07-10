@@ -26,12 +26,12 @@ class OilFillingController extends Controller
         return view('oil_filling.index', compact('oil_fillings'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        $jobcards = jobcard::where('status', 'active')->get();
+        $jobcards = jobcard::where('status', 'active')
+            ->whereHas('inspections')
+            ->whereDoesntHave('oil_filling')
+            ->get();
         $mocs = MOC::where('status', 'active')->get();
         $flanges = Flange::where('status', 'active')->get();
         $capillaries = Capillary::where('status', 'active')->get();
@@ -39,11 +39,22 @@ class OilFillingController extends Controller
         return view('oil_filling.create', compact('jobcards', 'mocs', 'flanges', 'capillaries', 'users'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
+        $jobcard = jobcard::find($request->jobcard_id);
+        if (!$jobcard) {
+            return back()->withInput()->withErrors(['jobcard_id' => 'Please create Jobcard before Inspection.']);
+        }
+
+        if (!$jobcard->inspections()->exists()) {
+            return back()->withInput()->withErrors(['jobcard_id' => 'Please complete Inspection before Oil Filling.']);
+        }
+
+        $existing = OilFilling::where('jobcard_id', $request->jobcard_id)->exists();
+        if ($existing) {
+            return back()->withInput()->withErrors(['jobcard_id' => 'Oil Filling record already exists for this Jobcard.']);
+        }
+
         $request->validate([
             'jobcard_id' => 'required|exists:jobcards,id',
             'oil_type' => 'required|string',
@@ -56,16 +67,13 @@ class OilFillingController extends Controller
         ]);
 
         $data = $request->all();
-        $data['filled_by'] = 'DILIPBHAI PATEL'; // Keep for legacy compatibility if needed
+        $data['filled_by'] = 'DILIPBHAI PATEL';
 
         OilFilling::create($data);
 
         return redirect()->route('oil-fillings.index')->with('success', 'Oil Filling record created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $oil_filling = OilFilling::with([
@@ -77,13 +85,15 @@ class OilFillingController extends Controller
         return view('oil_filling.show', compact('oil_filling'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         $oil_filling = OilFilling::findOrFail($id);
-        $jobcards = jobcard::all();
+        $jobcards = jobcard::where('status', 'active')
+            ->whereHas('inspections')
+            ->where(function($query) use ($oil_filling) {
+                $query->whereDoesntHave('oil_filling')
+                      ->orWhere('id', $oil_filling->jobcard_id);
+            })->get();
         $mocs = MOC::where('status', 'active')->get();
         $flanges = Flange::where('status', 'active')->get();
         $capillaries = Capillary::where('status', 'active')->get();
@@ -91,12 +101,23 @@ class OilFillingController extends Controller
         return view('oil_filling.edit', compact('oil_filling', 'jobcards', 'mocs', 'flanges', 'capillaries', 'users'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         $oil_filling = OilFilling::findOrFail($id);
+
+        $jobcard = jobcard::find($request->jobcard_id);
+        if (!$jobcard) {
+            return back()->withInput()->withErrors(['jobcard_id' => 'Please create Jobcard before Inspection.']);
+        }
+
+        if (!$jobcard->inspections()->exists()) {
+            return back()->withInput()->withErrors(['jobcard_id' => 'Please complete Inspection before Oil Filling.']);
+        }
+
+        $existing = OilFilling::where('jobcard_id', $request->jobcard_id)->where('id', '!=', $id)->exists();
+        if ($existing) {
+            return back()->withInput()->withErrors(['jobcard_id' => 'Oil Filling record already exists for this Jobcard.']);
+        }
 
         $request->validate([
             'jobcard_id' => 'required|exists:jobcards,id',

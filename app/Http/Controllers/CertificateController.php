@@ -18,7 +18,12 @@ class CertificateController extends Controller
             'oil_filling',
             'calibration.points',
             'calibration.flange',
-            'inspections'
+            'inspections',
+            'oilFilling.moc',
+            'oilFilling.flange',
+            'oilFilling.diaphragmMoc',
+            'oilFilling.capillary',
+            'oilFilling'
         ])->findOrFail($id);
 
         $pdf = Pdf::loadView('reports.certificate', compact('jobcard'))

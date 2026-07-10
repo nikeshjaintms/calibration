@@ -20,12 +20,22 @@ class jobcard extends Model
         return $this->hasMany(Inspection::class, 'jobcard_id');
     }
 
+    public function inspection()
+    {
+        return $this->hasOne(Inspection::class, 'jobcard_id');
+    }
+
     public function latestInspection()
     {
         return $this->hasOne(Inspection::class, 'jobcard_id')->latestOfMany();
     }
 
     public function oil_filling()
+    {
+        return $this->hasOne(OilFilling::class, 'jobcard_id');
+    }
+
+    public function oilFilling()
     {
         return $this->hasOne(OilFilling::class, 'jobcard_id');
     }

@@ -45,4 +45,9 @@ class OilFilling extends Model
     {
         return $this->belongsTo(Capillary::class, 'capillary_id');
     }
+
+    public function diaphragmMoc()
+    {
+        return $this->belongsTo(MOC::class, 'moc_id');
+    }
 }

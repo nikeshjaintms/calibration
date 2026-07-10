@@ -57,6 +57,11 @@
                                     </option>
                                     @endforeach
                                 </select>
+                                @if($jobcards->isEmpty())
+                                <div class="text-danger mt-1" style="font-size: 13px;">
+                                    No eligible Jobcards available. Please complete previous step first.
+                                </div>
+                                @endif
                                 @error('jobcard_id')
                                 <span class="text-danger">{{ $message }}</span>
                                 @enderror

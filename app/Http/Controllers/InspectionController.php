@@ -27,7 +27,9 @@ class InspectionController extends Controller
     public function create(Request $request)
     {
         $jobcard_id = $request->query('jobcard_id');
-        $jobcards = jobcard::all();
+        $jobcards = jobcard::where('status', 'active')
+            ->whereDoesntHave('inspections')
+            ->get();
         return view('inspection.create', compact('jobcards', 'jobcard_id'));
     }
 
@@ -36,6 +38,16 @@ class InspectionController extends Controller
      */
     public function store(Request $request)
     {
+        $jobcardExists = jobcard::where('id', $request->jobcard_id)->exists();
+        if (!$jobcardExists) {
+            return back()->withInput()->withErrors(['jobcard_id' => 'Please create Jobcard before Inspection.']);
+        }
+
+        $existing = Inspection::where('jobcard_id', $request->jobcard_id)->exists();
+        if ($existing) {
+            return back()->withInput()->withErrors(['jobcard_id' => 'Inspection already exists for this Jobcard.']);
+        }
+
         $request->validate([
             'jobcard_id' => 'required|exists:jobcards,id',
             'body_condition' => 'required|in:ok,damage',
@@ -80,7 +92,9 @@ class InspectionController extends Controller
     public function edit(string $id)
     {
         $inspection = Inspection::findOrFail($id);
-        $jobcards = jobcard::all();
+        $jobcards = jobcard::where('status', 'active')
+            ->orWhere('id', $inspection->jobcard_id)
+            ->get();
         return view('inspection.edit', compact('inspection', 'jobcards'));
     }
 
@@ -90,7 +104,17 @@ class InspectionController extends Controller
     public function update(Request $request, string $id)
     {
         $inspection = Inspection::findOrFail($id);
-        
+
+        $jobcardExists = jobcard::where('id', $request->jobcard_id)->exists();
+        if (!$jobcardExists) {
+            return back()->withInput()->withErrors(['jobcard_id' => 'Please create Jobcard before Inspection.']);
+        }
+
+        $existing = Inspection::where('jobcard_id', $request->jobcard_id)->where('id', '!=', $id)->exists();
+        if ($existing) {
+            return back()->withInput()->withErrors(['jobcard_id' => 'Inspection already exists for this Jobcard.']);
+        }
+
         $request->validate([
             'jobcard_id' => 'required|exists:jobcards,id',
             'body_condition' => 'required|in:ok,damage',

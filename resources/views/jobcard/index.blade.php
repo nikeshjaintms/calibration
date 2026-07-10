@@ -50,9 +50,26 @@
                                                 </td>
                                                 <td>
                                                     <div class="form-button-action">
-                                                        <a href="{{ route('inspections.create', ['jobcard_id' => $item->id]) }}" class="btn btn-link btn-success" data-bs-toggle="tooltip" title="Add Inspection">
-                                                            <i class="fa fa-clipboard-check"></i>
-                                                        </a>
+                                                        @php
+                                                            $hasInspection = $item->inspections->count() > 0;
+                                                            $hasOilFilling = (bool) $item->oil_filling;
+                                                            $hasCalibration = (bool) $item->calibration;
+                                                        @endphp
+                                                        @if(!$hasInspection)
+                                                            <a href="{{ route('inspections.create', ['jobcard_id' => $item->id]) }}" class="btn btn-xs btn-info" data-bs-toggle="tooltip" title="Start Inspection">
+                                                                Start Inspection
+                                                            </a>
+                                                        @elseif(!$hasOilFilling)
+                                                            <a href="{{ route('oil-fillings.create', ['jobcard_id' => $item->id]) }}" class="btn btn-xs btn-warning" data-bs-toggle="tooltip" title="Start Oil Filling">
+                                                                Start Oil Filling
+                                                            </a>
+                                                        @elseif(!$hasCalibration)
+                                                            <a href="{{ route('calibrations.create', ['jobcard_id' => $item->id]) }}" class="btn btn-xs btn-success" data-bs-toggle="tooltip" title="Start Calibration">
+                                                                Start Calibration
+                                                            </a>
+                                                        @else
+                                                            <span class="badge badge-success text-xs">Completed</span>
+                                                        @endif
                                                         <a href="{{ route('jobcards.show', $item->id) }}" class="btn btn-link btn-info" data-bs-toggle="tooltip" title="View Details">
                                                             <i class="fa fa-eye"></i>
                                                         </a>

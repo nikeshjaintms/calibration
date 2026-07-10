@@ -39,9 +39,16 @@
                                     <select name="jobcard_id" id="jobcard_id" class="form-select select2" required>
                                         <option value="">Select Jobcard</option>
                                         @foreach($jobcards as $jobcard)
-                                            <option value="{{ $jobcard->id }}">{{ $jobcard->jobcard_number }} ({{ $jobcard->customer_name }})</option>
+                                            <option value="{{ $jobcard->id }}" {{ (isset($jobcard_id) && $jobcard_id == $jobcard->id) || old('jobcard_id') == $jobcard->id ? 'selected' : '' }}>
+                                                {{ $jobcard->jobcard_number }} ({{ $jobcard->customer_name }})
+                                            </option>
                                         @endforeach
                                     </select>
+                                    @if($jobcards->isEmpty())
+                                    <div class="text-danger mt-1" style="font-size: 13px;">
+                                        No eligible Jobcards available. Please complete previous step first.
+                                    </div>
+                                    @endif
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label for="filling_date" class="form-label">Filling Date <span class="text-danger">*</span></label>
