@@ -55,10 +55,10 @@
                                         <p class="mb-1"><strong>MOC:</strong> {{ $oil_filling->moc->name }}</p>
                                     </div>
                                     <div class="col-md-4">
-                                        <p class="mb-1"><strong>FLANGE:</strong> {{ $oil_filling->flange->name }}</p>
+                                        <p class="mb-1"><strong>FLANGE:</strong> {{ $oil_filling->flange->name }}{{ !empty($oil_filling->flange->size) ? ' (' . $oil_filling->flange->size . ')' : '' }}</p>
                                     </div>
                                     <div class="col-md-4">
-                                        <p class="mb-1"><strong>CAPILLARY:</strong> {{ $oil_filling->capillary->name }}</p>
+                                        <p class="mb-1"><strong>CAPILLARY:</strong> {{ $oil_filling->capillary->name }}{{ !empty($oil_filling->capillary->size) ? ' (' . $oil_filling->capillary->size . ')' : '' }}</p>
                                     </div>
                                 </div>
                             </div>

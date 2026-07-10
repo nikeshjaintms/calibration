@@ -69,7 +69,9 @@
                                     <select name="flange_id" id="flange_id" class="form-select" required>
                                         <option value="">Select Flange</option>
                                         @foreach($flanges as $flange)
-                                            <option value="{{ $flange->id }}">{{ $flange->name }}</option>
+                                            <option value="{{ $flange->id }}">
+                                                {{ $flange->name }}{{ !empty($flange->size) ? ' (' . $flange->size . ')' : '' }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -78,7 +80,9 @@
                                     <select name="capillary_id" id="capillary_id" class="form-select" required>
                                         <option value="">Select Capillary</option>
                                         @foreach($capillaries as $capillary)
-                                            <option value="{{ $capillary->id }}">{{ $capillary->name }}</option>
+                                            <option value="{{ $capillary->id }}">
+                                                {{ $capillary->name }}{{ !empty($capillary->size) ? ' (' . $capillary->size . ')' : '' }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
