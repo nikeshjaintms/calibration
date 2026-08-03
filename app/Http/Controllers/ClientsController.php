@@ -31,7 +31,7 @@ class ClientsController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:clients,email',
+            'email' => 'nullable|email|unique:clients,email',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
             'company' => 'nullable|string|max:255',
@@ -79,7 +79,7 @@ class ClientsController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:clients,email,' . $client->id,
+            'email' => 'nullable|email|unique:clients,email,' . $client->id,
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
             'company' => 'nullable|string|max:255',

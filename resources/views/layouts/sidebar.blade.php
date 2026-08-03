@@ -37,6 +37,12 @@
                   <p>Users</p>
                 </a>
               </li>
+               <li class="nav-item {{ request()->is('clients*') ? 'active' : '' }}">
+                 <a href="{{ route('clients.index') }}">
+                   <i class="fas fa-users"></i>
+                   <p>Clients</p>
+                 </a>
+               </li>
                <li class="nav-item {{ request()->is('flanges*') ? 'active' : '' }}">
                 <a href="{{ route('flanges.index') }}">
                   <i class="fas fa-file-invoice"></i>

@@ -72,9 +72,9 @@
 
                             <div class="col-md-6 mt-3">
                                 <div class="form-group">
-                                    <label>Email <span style="color: red">*</span></label>
+                                    <label>Email</label>
                                     <input type="email" name="email" class="form-control"
-                                        value="{{ old('email', $client->email) }}" required>
+                                        value="{{ old('email', $client->email) }}">
                                     @error('email')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -151,7 +151,7 @@
                         required: true
                     },
                     email: {
-                        required: true,
+                        required: false,
                         regexEmail: true
                     },
                     gst_number: {
@@ -172,7 +172,6 @@
                         required: "Please enter company name"
                     },
                     email: {
-                        required: "Please enter email",
                         regexEmail: "Enter a valid email"
                     },
                     gst_number: {
