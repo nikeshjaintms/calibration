@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         User::create([
             'name' => 'Admin',
             'email' => 'admin@gmail.com',
-            'password' => 'password', // The User model 'hashed' cast will hash it automatically
+            'password' => 'Admin@123', // The User model 'hashed' cast will hash it automatically
             'is_admin' => true,
             'status' => 'active',
         ]);
